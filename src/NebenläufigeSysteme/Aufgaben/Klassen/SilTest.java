@@ -1,4 +1,7 @@
-package NebenläufigeSysteme.Aufgaben;
+package NebenläufigeSysteme.Aufgaben.Klassen;
+
+import NebenläufigeSysteme.Aufgaben.Interfaces.MotorInterface;
+import NebenläufigeSysteme.Aufgaben.Interfaces.SensorInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +11,7 @@ public class SilTest{
     ExecutorService executorService;
 
     public static void main(String[] args) {
-        Sensor sensor1 = new Sensor();
+        Sensor sensor1 = new Sensor("vorne_1");
 
         Engine motor1 = new Engine();
 

@@ -1,8 +1,10 @@
-package NebenläufigeSysteme.Aufgaben;
+package NebenläufigeSysteme.Aufgaben.Klassen;
+
+import NebenläufigeSysteme.Aufgaben.Interfaces.MotorInterface;
 
 import java.util.concurrent.TimeUnit;
 
-public class Engine implements MotorInterface{
+public class Engine implements MotorInterface {
     private int eingeschlagen = 0;
     private int speed = 0;
     @Override
