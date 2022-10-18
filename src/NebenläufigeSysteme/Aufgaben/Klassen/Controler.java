@@ -19,9 +19,10 @@ public class Controler implements ObserverInterface {
         }
     }
 
+    //Der Controller übernimmt die Ansteuerung der Motoren. Hier entscheidet er dass, wenn der Wert des
+    //Sensors über 0 liegt, der Motor angesprochen wird.
     @Override
     public void update(String source, int value) {
-        System.out.println(source + " changed Value");
         if(value > 0){
             for(MotorInterface engine: this.engines){
                 engine.lenken(value);

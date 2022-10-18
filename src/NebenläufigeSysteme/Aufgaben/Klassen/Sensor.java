@@ -7,16 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sensor implements SensorInterface {
+    //Voraussetzung für die Ermittlung ob sich der Wert geändert hat
     private int current_value;
     private int old_value;
+
+
     private boolean on = true;
     private String id;
-    List<ObserverInterface> observers = new ArrayList<>();
+    private List<ObserverInterface> observers = new ArrayList<>();
 
+    //Constructor
     Sensor(String source){
         this.id = source;
     }
 
+    //Damit ein neuer Messwert simuliert werden kann
     public void changeValue(int newValue){
         this.current_value = newValue;
     }
@@ -31,6 +36,7 @@ public class Sensor implements SensorInterface {
             observer.update(this.id, value);
         }
     }
+    //Regelschleife - notify observers, wenn sich der Wert ändert
     @Override
     public void start(){
         this.current_value = 0;
