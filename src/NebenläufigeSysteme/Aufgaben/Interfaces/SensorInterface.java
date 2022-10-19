@@ -1,4 +1,4 @@
-package NebenläufigeSysteme.Aufgaben;
+package NebenläufigeSysteme.Aufgaben.Interfaces;
 
 import java.util.List;
 
