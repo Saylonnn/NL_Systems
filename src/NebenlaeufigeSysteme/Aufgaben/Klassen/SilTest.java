@@ -41,6 +41,7 @@ public class SilTest{
         }
 
         //Tests
+        System.out.println("------------ Tests --------------");
         //Test 1 - So lange der Messwert nicht verändert wird darf der motor nicht eingeschlagen werden
         testGleich(0, motor1.getEingeschlagen());
         sensor1.changeValue(5);
@@ -51,6 +52,7 @@ public class SilTest{
             e.printStackTrace();
         }
         testGleich(5, motor1.getEingeschlagen());
+        testGleich(5, motor1.getSpeed());
         //Alle Threads schließen
         endComponents(executorService);
     }

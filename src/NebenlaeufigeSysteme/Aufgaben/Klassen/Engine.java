@@ -10,12 +10,13 @@ public class Engine implements MotorInterface {
     @Override
     public void lenken(int percent) {
         this.eingeschlagen = percent;
-        System.out.println("motor lenkt");
+        System.out.println("Motor lenkt");
     }
 
     @Override
     public void fahren(int percent) {
         this.speed = percent;
+        System.out.println("Motor fährt");
     }
 
     //Dauerschleife damit der Thread aktiv bleibt.

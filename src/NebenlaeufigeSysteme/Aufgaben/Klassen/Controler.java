@@ -24,6 +24,7 @@ public class Controler implements ObserverInterface {
         if(value > 0){
             for(MotorInterface engine: this.engines){
                 engine.lenken(value);
+                engine.fahren(value);
             }
         }
     }
