@@ -1,7 +1,7 @@
-package NebenläufigeSysteme.Aufgaben.Klassen;
+package NebenlaeufigeSysteme.Aufgaben.Klassen;
 
-import NebenläufigeSysteme.Aufgaben.Interfaces.ObserverInterface;
-import NebenläufigeSysteme.Aufgaben.Interfaces.SensorInterface;
+import NebenlaeufigeSysteme.Aufgaben.Interfaces.ObserverInterface;
+import NebenlaeufigeSysteme.Aufgaben.Interfaces.SensorInterface;
 
 import java.util.ArrayList;
 import java.util.List;

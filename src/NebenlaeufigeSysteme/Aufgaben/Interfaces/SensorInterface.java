@@ -1,6 +1,4 @@
-package NebenläufigeSysteme.Aufgaben.Interfaces;
-
-import java.util.List;
+package NebenlaeufigeSysteme.Aufgaben.Interfaces;
 
 public interface SensorInterface {
 

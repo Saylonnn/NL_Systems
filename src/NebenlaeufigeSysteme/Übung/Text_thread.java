@@ -1,9 +1,7 @@
-package NebenläufigeSysteme.Übung;
+package NebenlaeufigeSysteme.Übung;
 
 import java.lang.Thread;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
 
 
 public class Text_thread extends Thread{

@@ -1,4 +1,4 @@
-package NebenläufigeSysteme.Übung;
+package NebenlaeufigeSysteme.Übung;
 
 import java.util.ArrayList;
 import java.util.List;

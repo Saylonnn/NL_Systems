@@ -1,4 +1,4 @@
-package NebenläufigeSysteme.Übung;
+package NebenlaeufigeSysteme.Übung;
 
 
 public class Main {

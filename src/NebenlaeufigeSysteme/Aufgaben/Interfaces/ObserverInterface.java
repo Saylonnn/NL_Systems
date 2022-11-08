@@ -1,4 +1,4 @@
-package NebenläufigeSysteme.Aufgaben.Interfaces;
+package NebenlaeufigeSysteme.Aufgaben.Interfaces;
 
 public interface ObserverInterface {
     void update(String source, int value);

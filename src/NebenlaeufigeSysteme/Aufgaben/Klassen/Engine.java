@@ -1,6 +1,6 @@
-package NebenläufigeSysteme.Aufgaben.Klassen;
+package NebenlaeufigeSysteme.Aufgaben.Klassen;
 
-import NebenläufigeSysteme.Aufgaben.Interfaces.MotorInterface;
+import NebenlaeufigeSysteme.Aufgaben.Interfaces.MotorInterface;
 
 import java.util.concurrent.TimeUnit;
 

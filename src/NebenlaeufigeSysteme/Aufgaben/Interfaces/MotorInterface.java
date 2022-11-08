@@ -1,4 +1,4 @@
-package NebenläufigeSysteme.Aufgaben.Interfaces;
+package NebenlaeufigeSysteme.Aufgaben.Interfaces;
 
 public interface MotorInterface {
     void lenken(int percent);
