@@ -2,35 +2,75 @@ package NebenlaeufigeSysteme.Aufgaben.Aufgabe4;
 
 import NebenlaeufigeSysteme.Aufgaben.Interfaces.ObserverInterface;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+
 public class SilTest implements ObserverInterface {
-    Sensor sensor = new Sensor("main");
-    int sensor_update_value = 0;
-    SilTest() {
-        sensor.addObserver(this);
-    }
+    static boolean first_update = true;
+    static Sensor sensor = new Sensor("main");
+
+    static int sensor_update_value;
+
     public static void main(String[] args){
-        int[] testReihe1 = {20,20,80,20,30,40,50,60,55,45,90,25,10,255,255,255,255,255};
-        int[] sollReihe1 = {20,20,20,20,30,40,50,60,55,45,45,25,10,0,0,0,0,0};
 
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        List<Callable<String>> callableParts = new ArrayList<>();
+        Callable<String> callableSensor = () -> {sensor.start(); return null;};
+        Future<String> future1 = executorService.submit(callableSensor);
+        try{
+            List<Future<String>> result = executorService.invokeAll(callableParts);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+
+
+        //80 als Maximal wert wird immer zurück gegeben wenn das Auto nichts vor sich hat
+        //Testreihe: Geradeaus von Wand wegfahren
+        int[] testReihe1 = {20,20,80,20,30,40,50,60,70,80,90,25,10,255,255,255,255,255};
+        int[] sollReihe1 = {20,20,20,20,30,40,50,60,70,80,80,80,80,80,80,80,80,80};
+        testReiheGleich(sollReihe1, testReihe1);
+
+        //Testreihe: Geradeaus nah an wand heran fahren
+        int[] testReihe2 = {20,15,10,5,255,255,255,255,255,255,255,255,255};
+        int[] sollReihe2 = {20,15,10,5,0,0,0,0,0,0,0,0,0};
+        testReiheGleich(sollReihe2, testReihe2);
+
+        //Testreihe: Kurve fahren - wand gerät außer sicht
+        int[] testReihe3 = {20,15,10,70,90,100,160,255,255,255,255};
+        int[] sollReihe3 = {20,15,10,10,10,80,80,80,80,80,80};
+        testReiheGleich(sollReihe3, testReihe3);
+
+
+
+
+        //test der funktionalität des Testskipts
+        int[] prüftestreihe2 = {20,30,40,45,50};
+        int[] prüfsollreihe2 = {20,30,40,45,50};
+        testReiheGleich(prüfsollreihe2, prüftestreihe2);
+
+
+        endComponents(executorService);
     }
 
-    public void testReiheGleich(int[] sollReihe, int[] testReihe){
+    public static void testReiheGleich(int[] sollReihe, int[] testReihe){
         int errorCounter = 0;
+        sensor.first_value = true;
         if(testReihe.length == sollReihe.length){
             for(int i = 0; i < testReihe.length; i++){
-                this.sensor.changeValue(testReihe[i]);
+                sensor.changeValue(testReihe[i]);
                 try{
-                    Thread.sleep(100);
+                    Thread.sleep(200);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }
-                if(this.sensor_update_value != sollReihe[i]){
-                    System.out.println("Fehlertoleranz nicht ausreichend: Ist: "+ Integer.toString(this.sensor_update_value)+ " soll: "+ Integer.toString(sollReihe[i]));
+                if(sensor.lastTransmittedValue != sollReihe[i]){
+                    System.out.println("Fehlertoleranz nicht ausreichend: Ist: "+ Integer.toString(sensor.lastTransmittedValue)+ " soll: "+ Integer.toString(sollReihe[i]));
                     errorCounter = errorCounter + 1;
                 }
 
             }
-            System.out.println("testReihe abgeschlossen mit "+ errorCounter + " fehlern.");
+            System.out.println("testReihe abgeschlossen mit "+ errorCounter + " fehlern, von " + testReihe.length + " Tests.");
         }
         else{
             System.out.println("Reihen nicht gleich lang");
@@ -47,6 +87,21 @@ public class SilTest implements ObserverInterface {
 
     @Override
     public void update(String source, int value) {
+        sensor_update_value = value;
+        System.out.println("sensor_update_value updated0");
+    }
 
+    public static void endComponents(ExecutorService exS){
+        try {
+            if (!exS.awaitTermination(1000, TimeUnit.MILLISECONDS)) {
+                exS.shutdownNow();
+                System.out.println("executor shuteddown");
+            }
+        } catch (InterruptedException e) {
+            exS.shutdownNow();
+            System.out.println("Executor Failure");
+        }
+        System.out.println("Exit");
+        System.exit(0);
     }
 }

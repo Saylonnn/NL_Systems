@@ -6,12 +6,14 @@ import NebenlaeufigeSysteme.Aufgaben.Interfaces.SensorInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sensor implements SensorInterface {
+public class Sensor implements SensorInterface  {
+    boolean stringDebugging = false;
+    boolean first_value = true;
     int lastTransmittedValue = 0;
-    int messwert = 0;
-    int letzterWert = 0;
-    int vorletzterWert = 0;
-    int vorvorletzterWert = 0;
+    int measurement = 0;
+    int lastmeasurement = 0;
+    int secondlastmeasurement = 0;
+    int thirdlastmeasurement = 0;
 
 
     private boolean on = true;
@@ -25,59 +27,110 @@ public class Sensor implements SensorInterface {
 
     //Damit ein neuer Messwert simuliert werden kann
     public void changeValue(int newValue){
-        this.messwert = newValue;
+        if(first_value){
+            thirdlastmeasurement = newValue;
+            secondlastmeasurement = newValue;
+            lastmeasurement = newValue;
+            measurement = newValue;
+            first_value = false;
+            lastTransmittedValue = newValue;
+        }
+        thirdlastmeasurement = secondlastmeasurement;
+        secondlastmeasurement = lastmeasurement;
+        lastmeasurement = measurement;
+        measurement = newValue;
+        sensorPrint("---------------------------------------");
+        sensorPrint("Value update:");
+        sensorPrint("measurement: "+ measurement);
+        sensorPrint("lastmeasurement: "+ lastmeasurement);
+        sensorPrint("secondlastmeasurement: "+ secondlastmeasurement);
+        sensorPrint("thirdlastmeasurement: "+ thirdlastmeasurement);
+        sensorPrint("---------------------------------------");
+
     }
     @Override
     public void addObserver(ObserverInterface observer) {
+        sensorPrint("observer added");
         this.observers.add(observer);
     }
 
     @Override
     public void notifyObservers(int value) {
+        lastTransmittedValue = value;
+
+        /*
         for(ObserverInterface observer: this.observers){
-            observer.update(this.id, value);
-            this.lastTransmittedValue = value;
+            //observer.update(this.id, value);
+
         }
+
+         */
     }
     //Regelschleife - notify observers, wenn sich der Wert ändert
     @Override
     public void start(){
-        while(on){
-            //wenn messwert == 255
-            //beim fahren
-            if(messwert == 255 && lastTransmittedValue < 80){
-                //kommt näher
-                if(vorletzterWert < letzterWert){
-                    //observer nur informieren wenn er nah an der wand ist, dann stehenbleiben
-                    if (lastTransmittedValue < 10){
-                        notifyObservers(0);
-                    }
-                }
-            }
-            // beim Fahren erkennen in hoher entfernung
-            if(messwert == 255 && lastTransmittedValue > 80){
-                //kommt näher
-                if(vorletzterWert < letzterWert){
-                    //observer nur informieren wenn er nah an der wand ist, dann stehenbleiben
-                    if (lastTransmittedValue < 10){
-                        notifyObservers(0);
-                    }
-                }
-            }
-            //wenn das auto nicht steht und etwas erkennt
-            if(messwert != letzterWert && messwert != 255){
-                //auslassen zu hoher Abweichungen
-                if (Math.abs(messwert - letzterWert) > 10){
 
+        while(on){
+
+            //lasttransmitted value = letzter übermittelter wert
+            //measurement
+            //lastmeasurement
+            //secondlastmeasurement
+            //thirdlastmeasurement
+
+            //höchswahrschienlich richtig oder out of range
+            if (Math.abs(measurement - lastmeasurement) <= 10){
+                if(measurement != 255 && measurement <=80){
+                    sensorPrint("case 1");
+                    notifyObservers(measurement);
+                }
+                else{
+                    if(measurement > 80 && measurement != 255){
+                        sensorPrint("case 2");
+                        notifyObservers(80);
+
+                    }
                 }
             }
+            //höchstwarscheinlich ein fehler
+            else{
+                //random fehlmessung
+                if(measurement != 255 && lastTransmittedValue >10){
+                    if (Math.abs(secondlastmeasurement - lastmeasurement) <= 10 && Math.abs(thirdlastmeasurement - secondlastmeasurement) <= 10 && Math.abs(lastmeasurement - measurement) <= 10){
+                        notifyObservers(measurement);
+                        sensorPrint("case 3");
+                    }
+                }
+                else{
+                    if(measurement == 255 && lastTransmittedValue <10){
+                        notifyObservers(0);
+                        sensorPrint("case 4");
+
+                    }
+                    else{
+                        if(measurement == 255 && thirdlastmeasurement > secondlastmeasurement && secondlastmeasurement < lastmeasurement){
+                            notifyObservers(80);
+                            sensorPrint("case 5");
+                        }
+                    }
+                }
+            }
+
+
+            //damit nicht durchgehend überprüft wird
             try{
                 Thread.sleep(100);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
-            //implementierung Fehlertoleranz
 
+
+        }
+
+    }
+    public void sensorPrint(String s){
+        if (stringDebugging){
+            System.out.println(s);
         }
     }
 }
