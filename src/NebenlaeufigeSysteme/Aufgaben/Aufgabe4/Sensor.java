@@ -57,75 +57,60 @@ public class Sensor implements SensorInterface  {
     @Override
     public void notifyObservers(int value) {
         lastTransmittedValue = value;
-
         /*
         for(ObserverInterface observer: this.observers){
             //observer.update(this.id, value);
-
         }
-
          */
     }
     //Regelschleife - notify observers, wenn sich der Wert ändert
     @Override
     public void start(){
-
-        while(on){
-
-            //lasttransmitted value = letzter übermittelter wert
-            //measurement
-            //lastmeasurement
-            //secondlastmeasurement
-            //thirdlastmeasurement
-
-            //höchswahrschienlich richtig oder out of range
-            if (Math.abs(measurement - lastmeasurement) <= 10){
-                if(measurement != 255 && measurement <=80){
-                    sensorPrint("case 1");
-                    notifyObservers(measurement);
-                }
-                else{
-                    if(measurement > 80 && measurement != 255){
-                        sensorPrint("case 2");
-                        notifyObservers(80);
-
-                    }
-                }
+        int big_abs_count = 0;
+        while(on) {
+            //Abstand <= 10 && unter 80
+            if (Math.abs(measurement - lastmeasurement) <= 10 && measurement <= 80) {
+                notifyObservers(measurement);
+                big_abs_count = 0;
+                sensorPrint("case 1");
             }
-            //höchstwarscheinlich ein fehler
-            else{
-                //random fehlmessung
-                if(measurement != 255 && lastTransmittedValue >10){
-                    if (Math.abs(secondlastmeasurement - lastmeasurement) <= 10 && Math.abs(thirdlastmeasurement - secondlastmeasurement) <= 10 && Math.abs(lastmeasurement - measurement) <= 10){
-                        notifyObservers(measurement);
-                        sensorPrint("case 3");
-                    }
-                }
-                else{
-                    if(measurement == 255 && lastTransmittedValue <10){
-                        notifyObservers(0);
-                        sensorPrint("case 4");
-
-                    }
-                    else{
-                        if(measurement == 255 && thirdlastmeasurement > secondlastmeasurement && secondlastmeasurement < lastmeasurement){
-                            notifyObservers(80);
-                            sensorPrint("case 5");
-                        }
-                    }
-                }
+            //Abstand < 10 && über 80 aber nicht 255
+            if (Math.abs(measurement - lastmeasurement) <= 10 && measurement > 80 && measurement != 255) {
+                notifyObservers(80);
+                big_abs_count = 0;
+                sensorPrint("case 2");
+            }
+            //Abstand > 10 --> Höchstwarscheinlich ein Fehler oder eine Kurve (3er Kette prüfen)
+            //Nicht 255, wenn counter 2 --> messwert übermitteln
+            if (Math.abs(measurement - lastmeasurement) > 10 && measurement != 255 && big_abs_count == 2) {
+                ///WTF was macht das?
+                notifyObservers(measurement);
+                sensorPrint("case 3");
+            }
+            //Großer Abstand Counter unter 2 -> hochzählen
+            if (Math.abs(measurement - lastmeasurement) > 10 && measurement != 255 && big_abs_count < 2) {
+                big_abs_count++;
+                sensorPrint("case 4");
+            }
+            //Zu nah an der Wand
+            if (measurement == 255 && lastTransmittedValue <= 10) {
+                notifyObservers(0);
+                sensorPrint("case 5");
             }
 
-
+            // Nächstes Objekt zu weit entfernt
+            if (measurement == 255 && thirdlastmeasurement < secondlastmeasurement && secondlastmeasurement < lastmeasurement) {
+                notifyObservers(80);
+                sensorPrint("case 6");
+            }
             //damit nicht durchgehend überprüft wird
-            try{
+            try {
                 Thread.sleep(100);
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
         }
+
 
     }
     public void sensorPrint(String s){

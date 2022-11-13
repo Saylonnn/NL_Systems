@@ -27,6 +27,7 @@ public class SilTest implements ObserverInterface {
 
         //80 als Maximal wert wird immer zurück gegeben wenn das Auto nichts vor sich hat
         //Testreihe: Geradeaus von Wand wegfahren
+        //soll wenn die Wand weiter als 80 entfernt ist nur noch 80 zurück geben
         int[] testReihe1 = {20,20,80,20,30,40,50,60,70,80,90,25,10,255,255,255,255,255};
         int[] sollReihe1 = {20,20,20,20,30,40,50,60,70,80,80,80,80,80,80,80,80,80};
         testReiheGleich(sollReihe1, testReihe1);
@@ -47,7 +48,7 @@ public class SilTest implements ObserverInterface {
         //test der funktionalität des Testskipts
         int[] prüftestreihe2 = {20,30,40,45,50};
         int[] prüfsollreihe2 = {20,30,40,45,50};
-        testReiheGleich(prüfsollreihe2, prüftestreihe2);
+        //testReiheGleich(prüfsollreihe2, prüftestreihe2);
 
 
         endComponents(executorService);
@@ -60,7 +61,8 @@ public class SilTest implements ObserverInterface {
             for(int i = 0; i < testReihe.length; i++){
                 sensor.changeValue(testReihe[i]);
                 try{
-                    Thread.sleep(200);
+                    //ein kleines bisschen mehr als die Abtastzeit des Sensors
+                    Thread.sleep(110);
                 }catch (InterruptedException e){
                     e.printStackTrace();
                 }
