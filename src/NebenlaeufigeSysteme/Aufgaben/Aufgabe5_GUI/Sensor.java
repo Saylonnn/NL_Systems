@@ -67,6 +67,7 @@ public class Sensor implements SensorInterface {
     public void start(){
         int big_abs_count = 0;
         while(on) {
+            System.out.println("Thread running");
             //Abstand <= 10 && unter 80
             if (Math.abs(measurement - lastmeasurement) <= 10 && measurement <= 80) {
                 notifyObservers(measurement);

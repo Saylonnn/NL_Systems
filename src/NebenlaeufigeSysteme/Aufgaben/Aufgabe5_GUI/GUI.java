@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class GUI extends JFrame implements ActionListener, MotorInterface, SensorInterface {
+public class GUI extends JFrame  {
     JLabel label;
     public GUI() {
         this.setTitle("Car Controller");
@@ -26,7 +26,7 @@ public class GUI extends JFrame implements ActionListener, MotorInterface, Senso
         this.add(label);
         JButton button = new JButton("moin");
         this.add(button);
-        button.addActionListener(this);
+        //button.addActionListener(this);
 
         //this.pack();
         this.setVisible(true);
