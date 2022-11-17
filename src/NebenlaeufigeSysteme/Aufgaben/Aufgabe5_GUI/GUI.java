@@ -109,8 +109,13 @@ public class GUI extends JFrame{
                 engineList.add(engine_controll);
 
                 print("now Controller start");
+                controller = new Controller(sensorList, engineList);
 
-                exS.execute(runCont(sensorList, engineList));
+                Runnable runCont = () -> {
+                    controller.start();
+                };
+
+                exS.execute(runCont);
                 print("jetzt sollte die GUI laden");
 
                 GUI gui = new GUI();
@@ -133,11 +138,5 @@ public class GUI extends JFrame{
             System.out.println(debuggingString);
         }
     }
-    private static Runnable runCont(List<SensorInterface> x, List<MotorInterface> y) {
-        print("runnable started");
-        controller = new Controller(x, y);
-        print("controller init");
-        controller.start();
-        return null;
-    };
+
 }

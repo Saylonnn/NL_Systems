@@ -48,7 +48,7 @@ public class Controller implements ObserverInterface {
 
     public void start(){
         while(on){
-            //do work
+            print("contgroller started");
             try{
                 Thread.sleep(100);
             } catch (InterruptedException e){
