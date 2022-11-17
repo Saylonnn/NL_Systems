@@ -5,6 +5,11 @@ import NebenlaeufigeSysteme.Aufgaben.Interfaces.MotorInterface;
 import java.util.concurrent.TimeUnit;
 
 public class Engine implements MotorInterface {
+    String id;
+
+    Engine(String id){
+        this.id = id;
+    }
     private int eingeschlagen = 0;
     private int speed = 0;
     @Override
