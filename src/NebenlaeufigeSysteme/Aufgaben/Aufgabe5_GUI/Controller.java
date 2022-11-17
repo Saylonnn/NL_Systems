@@ -12,10 +12,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Controller implements ObserverInterface {
+    static boolean printDebugging = true;
+    boolean on = true;
     ExecutorService exS;
     List<SensorInterface> sensors;
     List<MotorInterface> engines;
     Controller(List<SensorInterface> sensors, List<MotorInterface> engines){
+        print("init started");
         this.sensors = sensors;
         this.engines = engines;
         for(SensorInterface sensor: this.sensors){
@@ -41,8 +44,17 @@ public class Controller implements ObserverInterface {
             exS.execute(x);
         }
 
+    }
 
-
+    public void start(){
+        while(on){
+            //do work
+            try{
+                Thread.sleep(100);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     //Der Controller übernimmt die Ansteuerung der Motoren. Hier entscheidet er dass, wenn der Wert des
@@ -56,6 +68,7 @@ public class Controller implements ObserverInterface {
             }
         }
     }
+
     public void endComponents(){
         try {
             if (!exS.awaitTermination(1000, TimeUnit.MILLISECONDS)) {
@@ -69,4 +82,15 @@ public class Controller implements ObserverInterface {
         System.out.println("Exit");
         System.exit(0);
     }
+
+    public void controller_shutdown(){
+        this.on = false;
+        endComponents();
+    }
+    public static void print(String debuggingString){
+        if (printDebugging == true){
+            System.out.println(debuggingString);
+        }
+    }
+
 }
