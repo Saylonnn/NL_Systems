@@ -10,18 +10,16 @@ public class Engine implements MotorInterface {
     Engine(String id){
         this.id = id;
     }
-    private int eingeschlagen = 0;
+    private int steering = 0;
     private int speed = 0;
     @Override
     public void lenken(int percent) {
-        this.eingeschlagen = percent;
-        System.out.println("Motor lenkt");
+        this.steering = percent;
     }
 
     @Override
     public void fahren(int percent) {
         this.speed = percent;
-        System.out.println("Motor fährt");
     }
 
     //Dauerschleife damit der Thread aktiv bleibt.
@@ -34,9 +32,14 @@ public class Engine implements MotorInterface {
         }
     }
 
+    @Override
+    public String getID() {
+        return id;
+    }
+
     //Um die Tests zu ermöglichen
-    public int getEingeschlagen(){
-        return this.eingeschlagen;
+    public int getSteering(){
+        return this.steering;
     }
     public int getSpeed(){
         return this.speed;

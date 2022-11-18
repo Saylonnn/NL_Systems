@@ -29,11 +29,21 @@ public class Engine implements MotorInterface {
         }
     }
 
+    @Override
+    public String getID() {
+        return null;
+    }
+
     //Um die Tests zu ermöglichen
     public int getEingeschlagen(){
         return this.eingeschlagen;
     }
     public int getSpeed(){
         return this.speed;
+    }
+
+    @Override
+    public int getSteering() {
+        return 0;
     }
 }

@@ -47,8 +47,9 @@ public class Controller implements ObserverInterface {
     }
 
     public void start(){
+        print("contgroller started");
         while(on){
-            print("contgroller started");
+
             try{
                 Thread.sleep(100);
             } catch (InterruptedException e){
@@ -86,6 +87,7 @@ public class Controller implements ObserverInterface {
     public void controller_shutdown(){
         this.on = false;
         endComponents();
+        System.out.println("Finally Closed");
     }
     public static void print(String debuggingString){
         if (printDebugging == true){
