@@ -5,8 +5,6 @@ import NebenlaeufigeSysteme.Aufgaben.Interfaces.SensorInterface;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -125,26 +123,21 @@ public class GUI extends JFrame{
 
         main_panel.add(panel3);
 
-        switchDirectionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (directioLabel.getText().equals("Direction: Forward")){
-                    directioLabel.setText("Direction: Backward");
-                    controller.setDrivingDirection("bw");
-                } else {
-                    directioLabel.setText("Direction: Forward");
-                    controller.setDrivingDirection("fw");
-                }
-                submitValues();
+        switchDirectionButton.addActionListener(e -> {
+            if (directioLabel.getText().equals("Direction: Forward")){
+                directioLabel.setText("Direction: Backward");
+                controller.setDrivingDirection("bw");
+            } else {
+                directioLabel.setText("Direction: Forward");
+                controller.setDrivingDirection("fw");
             }
+            submitValues();
         });
-        submitButtton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
+        submitButtton.addActionListener(e -> {
                 print("submitted");
                 submitValues();
-            }
         });
+
         //extend closemethod so Threads shutdown
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -187,37 +180,25 @@ public class GUI extends JFrame{
         controller = new Controller(sensorList, engineList);
 
         //Launche in extra Threads
-        exS.submit(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
+        exS.submit((Callable<String>)()-> {
                 controller.start();
                 return null;
-            }
         });
 
-        exS.submit(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
+        exS.submit((Callable<String>)() -> {
                 enginesValueUpdate();
                 return null;
-            }
         });
 
-        exS.submit(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
+        exS.submit((Callable<String>)()-> {
                 updateControllerValues();
                 return null;
-            }
         });
 
         //Launche GUI
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                GUI gui = new GUI();
-                gui.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            GUI gui = new GUI();
+            gui.setVisible(true);
         });
     }
 
@@ -263,10 +244,10 @@ public class GUI extends JFrame{
     private static void updateControllerValues(){
         while(working) {
             int[] x = controller.getSensorInt();
-            c_fl_label.setText("Front-Left: " + Integer.toString(x[0]));
-            c_fr_label.setText("Front-right: " + Integer.toString(x[1]));
-            c_bl_label.setText("Back-Left: " + Integer.toString(x[2]));
-            c_br_label.setText("Back-right: " + Integer.toString(x[3]));
+            c_fl_label.setText("Front-Left: " + x[0]);
+            c_fr_label.setText("Front-right: " + x[1]);
+            c_bl_label.setText("Back-Left: " + x[2]);
+            c_br_label.setText("Back-right: " + x[3]);
             try{
                 Thread.sleep(100);
             }catch (InterruptedException e){
