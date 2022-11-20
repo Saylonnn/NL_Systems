@@ -9,13 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.Format;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 public class GUI extends JFrame{
@@ -64,7 +60,7 @@ public class GUI extends JFrame{
         panel1.setBorder(BorderFactory.createLineBorder(Color.black));
         panel1.setLayout(new GridLayout(6,1));
 
-        Format amountFormat = NumberFormat.getNumberInstance();
+
         JPanel sliderPanel1 = new JPanel();
             sliderPanel1.setLayout(new GridLayout(1,2));
             JLabel l1_fl = new JLabel("Sensor 1 (fl)");
@@ -191,20 +187,29 @@ public class GUI extends JFrame{
         controller = new Controller(sensorList, engineList);
 
         //Launche in extra Threads
-        Runnable runCont = () -> {
-            controller.start();
-        };
-        exS.execute(runCont);
+        exS.submit(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                controller.start();
+                return null;
+            }
+        });
 
-        Runnable runEngineUpdate = () -> {
-            enginesValueUpdate();
-        };
-        exS.execute(runEngineUpdate);
+        exS.submit(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                enginesValueUpdate();
+                return null;
+            }
+        });
 
-        Runnable runContUp = () ->{
-            updateControllerValues();
-        };
-        exS.execute(runContUp);
+        exS.submit(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                updateControllerValues();
+                return null;
+            }
+        });
 
         //Launche GUI
         EventQueue.invokeLater(new Runnable() {
@@ -220,10 +225,10 @@ public class GUI extends JFrame{
     private static void enginesValueUpdate(){
         while (working){
             for(MotorInterface x : engineList){
-                if(x.getID() == "drive"){
+                if(x.getID().equals("drive")){
                     motorSpeed.setText(Integer.toString(x.getSpeed()));
                 }
-                if(x.getID() == "controll"){
+                if(x.getID().equals("controll")){
                     steering.setText(Integer.toString(x.getSteering()));
                 }
             }
@@ -233,23 +238,22 @@ public class GUI extends JFrame{
                 e.printStackTrace();
             }
         }
-
     }
 
     //send Values to Sensor
     private void submitValues(){
         //filter empty user input
-        if(ta1.getValue().toString() != "") {
+        if(!ta1.getValue().toString().equals("")) {
             sensor_fl.changeValue(Integer.parseInt(ta1.getValue().toString()));
             print("value fl transmitted "+ ta1.getValue().toString());
         }
-        if(ta2.getValue().toString() != "") {
+        if(!ta2.getValue().toString().equals("")) {
             sensor_fr.changeValue(Integer.parseInt(ta2.getValue().toString()));
         }
-        if(ta3.getValue().toString() != "") {
+        if(!ta3.getValue().toString().equals("")) {
             sensor_bl.changeValue(Integer.parseInt(ta3.getValue().toString()));
         }
-        if(ta4.getValue().toString() != "") {
+        if(!ta4.getValue().toString().equals("")) {
             sensor_br.changeValue(Integer.parseInt(ta4.getValue().toString()));
         }
     }
@@ -273,14 +277,13 @@ public class GUI extends JFrame{
     }
 
     //Close and Debugging Methods
-    private int close(){
+    private void close(){
         working = false;
         print("closemethod started");
-        this.controller.controller_shutdown();
+        controller.controller_shutdown();
         endComponents();
         this.setVisible(false);
         this.dispose();
-        return 0;
     }
 
 
@@ -301,7 +304,7 @@ public class GUI extends JFrame{
 
     //um das debugging zu erleichtern
     private static void print(String debuggingString){
-        if (printDebugging == true){
+        if (printDebugging){
             System.out.println("[GUI] " + debuggingString);
         }
     }

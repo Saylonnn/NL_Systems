@@ -6,6 +6,7 @@ import NebenlaeufigeSysteme.Aufgaben.Interfaces.SensorInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -41,18 +42,24 @@ public class Controller implements ObserverInterface {
         }
 
         exS = Executors.newFixedThreadPool(6);
-        List<Runnable> funcs = new ArrayList<>();
 
         for (SensorInterface sens: sensors){
-            Runnable runableTask = sens::start;
-            funcs.add(runableTask);
+            exS.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    sens.start();
+                    return null;
+                }
+            });
         }
         for(MotorInterface engine: engines){
-            Runnable runableTask = engine::start;
-            funcs.add(runableTask);
-        }
-        for(Runnable x : funcs){
-            exS.execute(x);
+            exS.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    engine.start();
+                    return null;
+                }
+            });
         }
     }
 
