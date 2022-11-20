@@ -5,6 +5,7 @@ import NebenlaeufigeSysteme.Aufgaben.Interfaces.MotorInterface;
 import java.util.concurrent.TimeUnit;
 
 public class Engine implements MotorInterface {
+    static boolean printDebugging = false;
     String id;
 
     Engine(String id){
@@ -15,11 +16,13 @@ public class Engine implements MotorInterface {
     @Override
     public void lenken(int percent) {
         this.steering = percent;
+        print("steering " + percent);
     }
 
     @Override
     public void fahren(int percent) {
         this.speed = percent;
+        print("driving " + percent);
     }
 
     //Dauerschleife damit der Thread aktiv bleibt.
@@ -43,5 +46,10 @@ public class Engine implements MotorInterface {
     }
     public int getSpeed(){
         return this.speed;
+    }
+    private void print(String s){
+        if (printDebugging) {
+            System.out.println("[Engine] " + s);
+        }
     }
 }
