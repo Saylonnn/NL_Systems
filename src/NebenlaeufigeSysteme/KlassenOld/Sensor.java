@@ -1,5 +1,6 @@
 package NebenlaeufigeSysteme.KlassenOld;
 
+/*
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
@@ -69,7 +70,7 @@ public class Sensor implements SensorInterface {
 
     }
     //Regelschleife - notify observers, wenn sich der Wert ändert
-    @Override
+
     public void start(){
         int big_abs_count = 0;
         while(on) {
@@ -131,3 +132,4 @@ public class Sensor implements SensorInterface {
     }
 }
 
+*/

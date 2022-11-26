@@ -1,4 +1,5 @@
 package NebenlaeufigeSysteme.KlassenOld;
+/*
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 
@@ -54,3 +55,4 @@ public class Engine implements EngineInterface {
         }
     }
 }
+*/

@@ -35,7 +35,7 @@
    </target>
 
     <target name="run-GUI" depends="build-GUI">
-        <java classname="NebenlaeufigeSysteme.KlassenOld.GUI" classpathref="classpath" fork="true">
+        <java classname="NebenlaeufigeSysteme.Klassen.Launcher" classpathref="classpath" fork="true">
         <arg value="gui"/>
         <arg value="gui"/>
         </java>

@@ -1,5 +1,5 @@
 package NebenlaeufigeSysteme.KlassenOld;
-
+/*
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 
 import java.util.ArrayList;
@@ -107,3 +107,4 @@ public class SilTest implements ObserverInterface {
         System.exit(0);
     }
 }
+*/

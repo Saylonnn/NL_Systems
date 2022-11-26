@@ -1,4 +1,5 @@
 package NebenlaeufigeSysteme.KlassenOld;
+/*
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
@@ -103,14 +104,14 @@ public class Controller implements ObserverInterface {
         EngineInterface steeringEngine = engines.get(1);
         EngineInterface driveEngine = engines.get(0);
 
-        /*
+
         Implemented Rules:
            Halte an wenn einer der forderen Sensoren unter 10 cm zur Wand hat
            ansonsten fahre vollgas
            lenke links wenn der rechte front sensor näher an der wand ist als der linke
            lenke rechts wenn der linke front sensor näher an der wand ist als der rechte
            fahr gerade aus wenn beide front sensoren das gleiche angeben (bestenfalls 80 als keine Wand voraus)
-         */
+
 
         //Driving Forward
         if (drivingDirection.equals("fw")){
@@ -215,3 +216,4 @@ public class Controller implements ObserverInterface {
     }
 
 }
+*/

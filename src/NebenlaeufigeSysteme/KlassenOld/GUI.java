@@ -1,6 +1,6 @@
 package NebenlaeufigeSysteme.KlassenOld;
 
-
+/*
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
@@ -139,7 +139,6 @@ public class GUI extends Sensor implements SensorInterface, EngineInterface {
             submitValues();
         });
         submitButtton.addActionListener(e -> {
-                print("submitted");
                 submitValues();
         });
 
@@ -322,3 +321,4 @@ public class GUI extends Sensor implements SensorInterface, EngineInterface {
         }
     }
 }
+*/
