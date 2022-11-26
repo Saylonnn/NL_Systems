@@ -1,15 +1,15 @@
-package NebenlaeufigeSysteme.Aufgaben.Aufgabe5_GUI;
+package NebenlaeufigeSysteme.KlassenOld;
 
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.ObserverInterface;
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.SensorInterface;
+import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
+import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sensor implements SensorInterface {
     boolean stringDebugging = false;
-    boolean first_value = false;
-    int lastTransmittedValue = 0;
+    public boolean first_value = false;
+    public int lastTransmittedValue = 0;
     int measurement = 0;
     int lastmeasurement = 0;
     int secondlastmeasurement = 0;
@@ -21,7 +21,7 @@ public class Sensor implements SensorInterface {
     private List<ObserverInterface> observers = new ArrayList<>();
 
     //Constructor
-    Sensor(String source){
+    public Sensor(String source){
         this.id = source;
     }
 

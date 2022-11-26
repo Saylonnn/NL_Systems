@@ -1,7 +1,10 @@
-package NebenlaeufigeSysteme.Aufgaben.Aufgabe5_GUI;
+package NebenlaeufigeSysteme.KlassenOld;
 
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.MotorInterface;
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.SensorInterface;
+
+
+import NebenlaeufigeSysteme.Interfaces.EngineInterface;
+import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
+import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-
-public class GUI extends JFrame{
+public class GUI extends Sensor implements SensorInterface, EngineInterface {
+    private List<ObserverInterface> observers = new ArrayList<>();
+    JFrame jFrame;
     //Booleans for debugging etc.
     static boolean working = true;
     static boolean printDebugging = false;
@@ -21,7 +25,7 @@ public class GUI extends JFrame{
     static Controller controller;
     static ExecutorService exS = Executors.newFixedThreadPool(6);
     static List<SensorInterface> sensorList;
-    static List<MotorInterface> engineList;
+    static List<EngineInterface> engineList;
     static Sensor sensor_fl;
     static Sensor sensor_fr;
     static Sensor sensor_bl;
@@ -42,17 +46,18 @@ public class GUI extends JFrame{
     static JLabel directioLabel;
 
     //Constructor
-    public GUI() {
+    private static void buildGUI() {
         print("GUI() aufgerufen");
-        this.setTitle("Car Controller");
-        this.setSize(900, 540);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame = new JFrame();
+        jFrame.setTitle("Car Controller");
+        jFrame.setSize(900, 540);
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel main_panel = new JPanel();
         main_panel.setBackground(Color.DARK_GRAY);
         main_panel.setLayout(new GridLayout(1, 3));
-        this.add(main_panel);
+        jFrame.add(main_panel);
 
         JPanel panel1 = new JPanel();
         panel1.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -139,18 +144,19 @@ public class GUI extends JFrame{
         });
 
         //extend closemethod so Threads shutdown
-        this.addWindowListener(new WindowAdapter() {
+        jFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 close();
             }
         });
         //launche Window
-        this.pack();
-        this.setVisible(true);
+        jFrame.pack();
+        jFrame.setVisible(true);
     }
 
     public static void main(String[] args) {
+        buildGUI();
         print("main wird ausgeführt");
         //init Objects here, not in consturctor because of the threading, Constructor is called after the main method
         motorSpeed = new JLabel("0");
@@ -198,14 +204,15 @@ public class GUI extends JFrame{
         //Launche GUI
         EventQueue.invokeLater(() -> {
             GUI gui = new GUI();
-            gui.setVisible(true);
+            JFrame jf = gui.getJframe();
+            jf.setVisible(true);
         });
     }
 
     //collect Engine Sensors and display it
     private static void enginesValueUpdate(){
         while (working){
-            for(MotorInterface x : engineList){
+            for(EngineInterface x : engineList){
                 if(x.getID().equals("drive")){
                     motorSpeed.setText(Integer.toString(x.getSpeed()));
                 }
@@ -263,11 +270,13 @@ public class GUI extends JFrame{
         print("closemethod started");
         controller.controller_shutdown();
         endComponents();
-        this.setVisible(false);
-        this.dispose();
+        jFrame.setVisible(false);
+        jFrame.dispose();
     }
 
-
+    public JFrame getJframe(){
+        return jFrame;
+    }
     //Threads beenden
     public void endComponents(){
         try {
@@ -291,5 +300,25 @@ public class GUI extends JFrame{
     }
 
 
+    @Override
+    public void lenken(int percent) {
+        steering.setText(Integer.toString(percent));
+    }
 
+    @Override
+    public void fahren(int percent) {
+        motorSpeed.setText(Integer.toString(percent));
+    }
+
+    @Override
+    public void addObserver(ObserverInterface observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers(int value) {
+        for(ObserverInterface x: observers){
+            x.update("fl", value);
+        }
+    }
 }

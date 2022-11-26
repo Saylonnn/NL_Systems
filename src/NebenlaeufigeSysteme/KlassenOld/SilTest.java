@@ -1,6 +1,6 @@
-package NebenlaeufigeSysteme.Aufgaben.Aufgabe4;
+package NebenlaeufigeSysteme.KlassenOld;
 
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.ObserverInterface;
+import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 
 import java.util.ArrayList;
 import java.util.List;

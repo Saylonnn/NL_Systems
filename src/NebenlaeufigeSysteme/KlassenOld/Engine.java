@@ -1,10 +1,11 @@
-package NebenlaeufigeSysteme.Aufgaben.Aufgabe5_GUI;
+package NebenlaeufigeSysteme.KlassenOld;
 
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.MotorInterface;
+import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 
 import java.util.concurrent.TimeUnit;
 
-public class Engine implements MotorInterface {
+public class Engine implements EngineInterface {
+    public Engine(){};
     static boolean printDebugging = false;
     String id;
 

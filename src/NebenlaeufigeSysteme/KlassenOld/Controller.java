@@ -1,8 +1,8 @@
-package NebenlaeufigeSysteme.Aufgaben.Aufgabe5_GUI;
+package NebenlaeufigeSysteme.KlassenOld;
 
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.MotorInterface;
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.ObserverInterface;
-import NebenlaeufigeSysteme.Aufgaben.Interfaces.SensorInterface;
+import NebenlaeufigeSysteme.Interfaces.EngineInterface;
+import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
+import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -24,23 +24,28 @@ public class Controller implements ObserverInterface {
     boolean on = true;
 
     //Object Init
-    ExecutorService exS;
-    List<SensorInterface> sensors;
-    List<MotorInterface> engines;
+    static ExecutorService exS;
+    static List<SensorInterface> sensors;
+    static List<EngineInterface> engines;
 
     //Constructor
-    Controller(List<SensorInterface> sensors, List<MotorInterface> engines){
-        print("init started");
-
+    Controller(List<SensorInterface> sensors, List<EngineInterface> engines) {
         //Create Sensors and Engines -> start them in extra Thread
         this.sensors = sensors;
         this.engines = engines;
 
-        for(SensorInterface sensor: this.sensors){
+        for (SensorInterface sensor : this.sensors) {
             sensor.addObserver(this);
         }
+    }
 
+    public static void main(String[] args) {
         exS = Executors.newFixedThreadPool(6);
+
+        if(args[0].equals("gui") && args[1].equals("gui")){
+
+        }
+
 
         for (SensorInterface sens: sensors){
             exS.submit((Callable<String>) () -> {
@@ -48,7 +53,7 @@ public class Controller implements ObserverInterface {
                 return null;
             });
         }
-        for(MotorInterface engine: engines){
+        for(EngineInterface engine: engines){
             exS.submit((Callable<String>) () -> {
                     engine.start();
                     return null;
@@ -95,8 +100,8 @@ public class Controller implements ObserverInterface {
 
     //Make the decision how to steer and how to drive
     private void decideMovement(int fl, int fr, int bl, int br){
-        MotorInterface steeringEngine = engines.get(1);
-        MotorInterface driveEngine = engines.get(0);
+        EngineInterface steeringEngine = engines.get(1);
+        EngineInterface driveEngine = engines.get(0);
 
         /*
         Implemented Rules:
