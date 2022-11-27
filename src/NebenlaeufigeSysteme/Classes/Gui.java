@@ -16,8 +16,8 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
     JSpinner ta2;
     JSpinner ta3;
     JSpinner ta4;
-    static JLabel motorSpeed;
-    static JLabel steering;
+    JLabel motorSpeed;
+    JLabel steering;
 
     // ---------------------------------------- SensorInterface Values --------------------------------
     private List<ObserverInterface> observers = new ArrayList<>();
@@ -30,8 +30,6 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
         // --------------------------------- left gui side --------------------------------------------
 
         jFrame = new JFrame();
-
-
 
         JPanel main_panel = new JPanel();
         main_panel.setBackground(Color.DARK_GRAY);
@@ -113,11 +111,13 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
 
     @Override
     public void lenken(int percent) {
-        this.steering.setText(Integer.toString(percent));
+        System.out.println("steering adjusted " + percent);
+        steering.setText(Integer.toString(percent));
     }
 
     @Override
     public void fahren(int percent) {
+
         motorSpeed.setText(Integer.toString(percent));
     }
 
@@ -130,9 +130,9 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
     public void notifyObservers(int value) {
         for(ObserverInterface x: observers){
             x.update("fl", (Integer) ta1.getValue());
-            x.update("fr", (Integer) ta1.getValue());
-            x.update("bl", (Integer) ta1.getValue());
-            x.update("br", (Integer) ta1.getValue());
+            x.update("fr", (Integer) ta2.getValue());
+            x.update("bl", (Integer) ta3.getValue());
+            x.update("br", (Integer) ta4.getValue());
         }
     }
 

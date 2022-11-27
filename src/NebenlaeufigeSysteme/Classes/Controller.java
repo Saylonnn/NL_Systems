@@ -28,7 +28,6 @@ public class Controller implements ObserverInterface {
 
         // ----------------------------------- only GUI -----------------------------------------------------
         if (SensorClass.equals("gui") && EngineClass.equals("gui")){
-
             Gui gui = new Gui();
             exS.submit((Callable<String>) () ->{
                 gui.startGUI();
@@ -42,7 +41,6 @@ public class Controller implements ObserverInterface {
             //Add Controller as Observer (only on 1 Server, otherwise we get 4 update calls)
             engine = gui;
             System.out.println("Objects created");
-
         }
 
         // ------------------------------- only SilTest -----------------------------------------------------
@@ -78,13 +76,19 @@ public class Controller implements ObserverInterface {
             //steering
             //steering left if right Object is nearer
             if (fl > fr){
+                System.out.println("fl " + fl);
+                System.out.println("fr " + fr);
                 engine.lenken(-10);
             }
             //steering right if left object is nearer
             if(fl < fr ){
+                System.out.println("fl " + fl);
+                System.out.println("fr " + fr);
                 engine.lenken(10);
             }
             if(fl == fr){
+                System.out.println("fl " + fl);
+                System.out.println("fr " + fr);
                 engine.lenken(0);
             }
         }
@@ -117,19 +121,23 @@ public class Controller implements ObserverInterface {
     @Override
     public void update(String source, int value) {
         if (source.equals("fl")) {
+            System.out.println("fl update= " + source + value);
             fl = value;
             decideMovement();
         }
         if (source.equals("fr")) {
+            System.out.println("fr update= " + source + value);
             fr = value;
             decideMovement();
         }
 
         if (source.equals("bl")) {
+            System.out.println("bl update= " + source + value);
             bl = value;
             decideMovement();
         }
         if (source.equals("br")){
+            System.out.println("br update= " + source + value);
             br = value;
             decideMovement();
         }

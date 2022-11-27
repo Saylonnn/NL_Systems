@@ -28,7 +28,7 @@
     </target>
 
 
-    <!-- Build Siltest to Siltest -->
+    <!-- Build gui to gui -->
    <target name="build-GUI" depends="clean, init">
        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
    </target>
@@ -42,6 +42,11 @@
             <arg value="gui"/>
         </java>
     </target>
+
+
+    <!--
+
+
 
     <!--
     <target name="jar" depends="compile">
