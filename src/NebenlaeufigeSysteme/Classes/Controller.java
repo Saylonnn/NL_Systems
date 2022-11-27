@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Controller implements ObserverInterface {
+    boolean working = true;
     // --------------------------------- Glob Values -------------------------------------------------
     // SensorValues and navigation Values
     int fl = 0, fr = 0, bl = 0, br = 0;
@@ -27,19 +28,21 @@ public class Controller implements ObserverInterface {
 
         // ----------------------------------- only GUI -----------------------------------------------------
         if (SensorClass.equals("gui") && EngineClass.equals("gui")){
+
             Gui gui = new Gui();
-            gui.addObserver(this);
-            SensorInterface sensor_fl = gui;
-            SensorInterface sensor_fr = gui;
-            SensorInterface sensor_bl =  gui;
-            SensorInterface sensor_br = gui;
-            //Add Controller as Observer (only on 1 Server, otherwise we get 4 update calls)
-            EngineInterface engine = gui;
             exS.submit((Callable<String>) () ->{
-                //gui.init();
-                //gui.start();
+                gui.startGUI();
                 return null;
             } );
+            gui.addObserver(this);
+            sensor_fl = gui;
+            sensor_fr = gui;
+            sensor_bl =  gui;
+            sensor_br = gui;
+            //Add Controller as Observer (only on 1 Server, otherwise we get 4 update calls)
+            engine = gui;
+            System.out.println("Objects created");
+
         }
 
         // ------------------------------- only SilTest -----------------------------------------------------
@@ -47,6 +50,18 @@ public class Controller implements ObserverInterface {
             //SilTest Impl.
         }
     }
+    // -------------------------------- control loop -----------------------------------------------
+    public void start(){
+        while(working){
+            try{
+                Thread.sleep(100);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     //-------------------------------- working Methodes ---------------------------------------------
     // Decide Movement based on Sensor Input Values --> Stored in Global Variables
     private void decideMovement(){

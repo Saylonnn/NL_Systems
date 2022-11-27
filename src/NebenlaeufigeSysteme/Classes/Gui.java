@@ -28,11 +28,10 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
     // -------------------------------------- Constructor Build Gui -----------------------------------
     Gui(){
         // --------------------------------- left gui side --------------------------------------------
+
         jFrame = new JFrame();
-        jFrame.setTitle("Car Controller");
-        jFrame.setSize(900, 540);
-        jFrame.setLocationRelativeTo(null);
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
 
         JPanel main_panel = new JPanel();
         main_panel.setBackground(Color.DARK_GRAY);
@@ -74,6 +73,7 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
         sliderPanel4.add(l4_br);
         sliderPanel4.add(ta4);
         panel1.add(sliderPanel4);
+        System.out.println("all Panels init");
 
         Button submitButtton = new Button("Submit");
         panel1.add(submitButtton);
@@ -87,24 +87,33 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
         panel2.setLayout(new GridLayout(2, 2));
         JLabel speedLabel = new JLabel("Fahrgeschwindigkeit");
         JLabel steeringLabel = new JLabel("<html><body><p>Motor eingeschlagen</p> <p>(default: 0°)</p></bodŷ></html>");
+        motorSpeed = new JLabel("0");
+        steering = new JLabel("0");
 
         panel2.add(speedLabel);
         panel2.add(motorSpeed);
+
         panel2.add(steeringLabel);
         panel2.add(steering);
-
         main_panel.add(panel2);
         submitButtton.addActionListener(e -> {
             notifyObservers(0);
         });
 
+    }
+    public void startGUI(){
+        jFrame.setTitle("Car Controller");
+        jFrame.setSize(900, 540);
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jFrame.pack();
         jFrame.setVisible(true);
+
     }
 
     @Override
     public void lenken(int percent) {
-        steering.setText(Integer.toString(percent));
+        this.steering.setText(Integer.toString(percent));
     }
 
     @Override

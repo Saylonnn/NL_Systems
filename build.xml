@@ -9,9 +9,8 @@
     <property name="compile.src.dir"    location="${src.dir}/NebenlaeufigeSysteme/Controller"/>
     <property name="main-class"     value="NebenlaeufigeSysteme.Aufgaben.Aufgabe6.Main"/>
 
-    <path id="classpath">
+    <path id="3rd-party-classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
-        <pathelement location="build"/>
     </path>
 
     <!--Clean - del Build -->
@@ -31,13 +30,16 @@
 
     <!-- Build Siltest to Siltest -->
    <target name="build-GUI" depends="clean, init">
-       <javac srcdir="${src.dir}" destdir="${classes.dir}"/>
+       <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
    </target>
 
     <target name="run-GUI" depends="build-GUI">
-        <java classname="NebenlaeufigeSysteme.Klassen.Launcher" classpathref="classpath" fork="true">
-        <arg value="gui"/>
-        <arg value="gui"/>
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+            <classpath >
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+            <arg value="gui"/>
+            <arg value="gui"/>
         </java>
     </target>
 
