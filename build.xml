@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="NL_Systems" basedir="." default="run-GUI">
+<project name="NL_Systems" basedir="." default="run-GUI-GUI">
     <property name="src.dir"        location="src"/>
     <property name="build.dir"      location="build"/>
     <property name="classes.dir"    location="${build.dir}/classes"/>
@@ -28,12 +28,16 @@
     </target>
 
 
-    <!-- Build gui to gui -->
+    <target name="build" depends="clean, init">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+    </target>
+
+    <!-- Build gui to gui
    <target name="build-GUI" depends="clean, init">
        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
-   </target>
+   </target>-->
 
-    <target name="run-GUI" depends="build-GUI">
+    <target name="run-GUI-GUI" depends="build">
         <java classname="NebenlaeufigeSysteme.Classes.Launcher">
             <classpath >
                 <pathelement location="${classes.dir}"/>
@@ -44,7 +48,50 @@
     </target>
 
 
-    <!--
+    <!-- Build Siltest to Siltest
+    <target name="build-ST-ST" depends="clean, init">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+    </target>-->
+
+    <target name="run-ST-ST" depends="build">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+            <classpath >
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+            <arg value="SilTest"/>
+            <arg value="SilTest"/>
+        </java>
+    </target>
+
+    <!-- Build Siltest to Siltest
+    <target name="build-ST-GUI" depends="clean, init">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+    </target>-->
+
+    <target name="run-ST-GUI" depends="build">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+            <classpath >
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+            <arg value="SilTest"/>
+            <arg value="gui"/>
+        </java>
+    </target>
+
+    <!-- Build Siltest to Siltest
+    <target name="build-GUI-ST" depends="clean, init">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+    </target> -->
+
+    <target name="run-GUI-ST" depends="build">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+            <classpath >
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+            <arg value="gui"/>
+            <arg value="SilTest"/>
+        </java>
+    </target>
 
 
 

@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Gui extends Sensor implements SensorInterface, EngineInterface {
     // ---------------------------------------- GUI Objects and Params --------------------------------
@@ -23,13 +26,21 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
     private List<ObserverInterface> observers = new ArrayList<>();
 
     // ---------------------------------------- Controll params ---------------------------------------
+    ExecutorService exS = Executors.newFixedThreadPool(1);
+    String sensorID;
 
 
     // -------------------------------------- Constructor Build Gui -----------------------------------
     Gui(){
+        super();
         // --------------------------------- left gui side --------------------------------------------
 
+
         jFrame = new JFrame();
+        jFrame.setTitle("Car Controller");
+        jFrame.setSize(900, 540);
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         JPanel main_panel = new JPanel();
         main_panel.setBackground(Color.DARK_GRAY);
@@ -97,18 +108,22 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
         submitButtton.addActionListener(e -> {
             notifyObservers(0);
         });
+        exS.submit((Callable<String>) () ->{
+            startGUI();
+            return null;
+        } );
 
     }
     public void startGUI(){
-        jFrame.setTitle("Car Controller");
-        jFrame.setSize(900, 540);
-        jFrame.setLocationRelativeTo(null);
-        jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         jFrame.pack();
         jFrame.setVisible(true);
 
     }
 
+    @Override
+    public void setID(String id){
+        sensorID = id;
+    }
     @Override
     public void lenken(int percent) {
         System.out.println("steering adjusted " + percent);
@@ -135,5 +150,8 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
             x.update("br", (Integer) ta4.getValue());
         }
     }
+
+
+
 
 }

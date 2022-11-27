@@ -24,15 +24,11 @@ public class Controller implements ObserverInterface {
 
     // ---------------------------- Constructor depending on params -----------------------------------------
     Controller(String SensorClass, String EngineClass){
-        exS = Executors.newFixedThreadPool(10);
 
         // ----------------------------------- only GUI -----------------------------------------------------
         if (SensorClass.equals("gui") && EngineClass.equals("gui")){
             Gui gui = new Gui();
-            exS.submit((Callable<String>) () ->{
-                gui.startGUI();
-                return null;
-            } );
+            gui.setID("all");
             gui.addObserver(this);
             sensor_fl = gui;
             sensor_fr = gui;
@@ -40,12 +36,45 @@ public class Controller implements ObserverInterface {
             sensor_br = gui;
             //Add Controller as Observer (only on 1 Server, otherwise we get 4 update calls)
             engine = gui;
-            System.out.println("Objects created");
         }
 
         // ------------------------------- only SilTest -----------------------------------------------------
         if (SensorClass.equals("SilTest") && EngineClass.equals("SilTest")){
-            //SilTest Impl.
+            SilTest st = new SilTest();
+            st.setID("all");
+            st.addObserver(this);
+            sensor_fl = st;
+            sensor_fr = st;
+            sensor_bl =  st;
+            sensor_br = st;
+            engine = st;
+
+        }
+
+        // -------------------------- silTest gui ----------------------------------------------------------
+        if (SensorClass.equals("SilTest") && EngineClass.equals("gui")){
+            Gui gui = new Gui();
+            SilTest st = new SilTest();
+            st.setID("all");
+            st.addObserver(this);
+            sensor_fl = st;
+            sensor_fr = st;
+            sensor_bl =  st;
+            sensor_br = st;
+            engine = gui;
+        }
+
+        // ------------------------- gui SilTest -----------------------------------------------------
+        if (SensorClass.equals("gui") && EngineClass.equals("SilTest")){
+            Gui gui = new Gui();
+            gui.setID("all");
+            SilTest st = new SilTest();
+            gui.addObserver(this);
+            sensor_fl = gui;
+            sensor_fr = gui;
+            sensor_bl =  gui;
+            sensor_br = gui;
+            engine = st;
         }
     }
     // -------------------------------- control loop -----------------------------------------------
@@ -76,19 +105,13 @@ public class Controller implements ObserverInterface {
             //steering
             //steering left if right Object is nearer
             if (fl > fr){
-                System.out.println("fl " + fl);
-                System.out.println("fr " + fr);
                 engine.lenken(-10);
             }
             //steering right if left object is nearer
             if(fl < fr ){
-                System.out.println("fl " + fl);
-                System.out.println("fr " + fr);
                 engine.lenken(10);
             }
             if(fl == fr){
-                System.out.println("fl " + fl);
-                System.out.println("fr " + fr);
                 engine.lenken(0);
             }
         }
@@ -121,27 +144,26 @@ public class Controller implements ObserverInterface {
     @Override
     public void update(String source, int value) {
         if (source.equals("fl")) {
-            System.out.println("fl update= " + source + value);
             fl = value;
             decideMovement();
         }
         if (source.equals("fr")) {
-            System.out.println("fr update= " + source + value);
             fr = value;
             decideMovement();
         }
 
         if (source.equals("bl")) {
-            System.out.println("bl update= " + source + value);
             bl = value;
             decideMovement();
         }
         if (source.equals("br")){
-            System.out.println("br update= " + source + value);
             br = value;
             decideMovement();
         }
     }
+
+
+
 
 
 
