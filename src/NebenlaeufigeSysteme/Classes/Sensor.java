@@ -12,7 +12,7 @@ public class Sensor implements SensorInterface {
     private boolean first_value = false;
 
     // measurement, lastemeasurement, secondlastmesurement, thirdlastmeasurement, lasttransmittedValue, big_abs_count
-    int[] mValues = {0,0,0,0,0,0};
+    private int[] mValues = {0,0,0,0,0,0};
 
 
 
@@ -35,12 +35,10 @@ public class Sensor implements SensorInterface {
         mValues[2] =  mValues[1];
         mValues[1] =  mValues[0];
         mValues[0] = newValue;
-
-
     }
     @Override
     public void addObserver(ObserverInterface observer) {
-        System.out.println("observer added");
+        //System.out.println("observer added");
         this.observers.add(observer);
     }
 
@@ -78,48 +76,50 @@ public class Sensor implements SensorInterface {
         }
     }
 
-    public void faultTolerantMeasurement(int[] values){
+    public int[] faultTolerantMeasurement(int[] values){
         //everything over 255 cant be send by the sensor -> wrong gui / SilTest input
         if(values[0] < 256){
 
             //Abstand <= 10 && unter 80
             if (Math.abs(values[0] - values[1]) <= 10 && values[0] <= 80) {
-                notifyObservers(values[0]);
-                mValues[5] = 0;
+                values[4] = values[0];
+                values[5] = 0;
+
                 //sensorPrint("case 1");
             }
             //Abstand < 10 && über 80 aber nicht 255
             if (Math.abs(values[0] - values[1]) <= 10 && values[0] > 80 && values[0] != 255) {
-                notifyObservers(80);
-                mValues[5] = 0;
+                values[4] = 80;
+                values[5] = 0;
                 //sensorPrint("case 2");
             }
             //Abstand > 10 --> Höchstwarscheinlich ein Fehler oder eine Kurve (3er Kette prüfen)
             //Nicht 255, wenn counter 2 --> messwert übermitteln
-            if (Math.abs(values[0] - values[1]) > 10 && values[0] != 255 && mValues[5] == 2) {
-                notifyObservers(values[0]);
-                mValues[5] = 0;
+            if (Math.abs(values[0] - values[1]) > 10 && values[0] != 255 && values[5] == 2) {
+                values[4] = values[0];
+                values[5] = 0;
                 //sensorPrint("case 3");
             }
             //Großer Abstand Counter unter 2 -> hochzählen
-            if (Math.abs(values[0] - values[1]) > 10 && values[0] != 255 && mValues[5] < 2) {
-                mValues[5]++;
+            if (Math.abs(values[0] - values[1]) > 10 && values[0] != 255 && values[5] < 2) {
+                values[5]++;
                 //sensorPrint("case 4");
             }
             //Zu nah an der Wand
-            if (values[0] == 255 && mValues[4] <= 10) {
-                notifyObservers(0);
-                mValues[5] = 0;
+            if (values[0] == 255 && values[4] <= 10) {
+                values[4] = 4;
+                values[5] = 0;
                 //sensorPrint("case 5");
             }
 
             // Nächstes Objekt zu weit entfernt
             if (values[0] == 255 && values[3] < values[2] && values[2] < values[1]) {
-                notifyObservers(80);
-                mValues[5] = 0;
+                values[4] = 80;
+                values[5] = 0;
                 //sensorPrint("case 6");
             }
         }
+        return values;
     }
     public void sensorPrint(String s){
         if (stringDebugging){

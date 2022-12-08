@@ -32,10 +32,15 @@
         <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
     </target>
 
-    <!-- Build gui to gui
-   <target name="build-GUI" depends="clean, init">
-       <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
-   </target>-->
+    <!-- Build NXT-->
+   <target name="build-NXT" depends="clean, init">
+       <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+               <classpath>
+                   <path location="${lib.dir}"/>
+               </classpath>
+       </javac>
+
+   </target>
 
     <target name="run-GUI-GUI" depends="build">
         <java classname="NebenlaeufigeSysteme.Classes.Launcher">
