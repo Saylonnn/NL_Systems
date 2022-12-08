@@ -1,5 +1,6 @@
-package NebenlaeufigeSysteme.Classes;
+package NebenlaeufigeSysteme.Classes.GUI;
 
+import NebenlaeufigeSysteme.Classes.Classes.Sensor;
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
@@ -31,7 +32,7 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
 
 
     // -------------------------------------- Constructor Build Gui -----------------------------------
-    Gui(){
+    public Gui(){
         super();
         // --------------------------------- left gui side --------------------------------------------
 

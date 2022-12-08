@@ -1,4 +1,4 @@
-package NebenlaeufigeSysteme.Classes;
+package NebenlaeufigeSysteme.Classes.Classes;
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
@@ -22,7 +22,7 @@ public class SilTest implements SensorInterface, EngineInterface {
     int sensor_br = 0;
 
     ExecutorService exS = Executors.newFixedThreadPool(1);
-    SilTest(){
+    public SilTest(){
         exS.submit((Callable<String>) () ->{
             start();
             return null;

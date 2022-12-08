@@ -5,6 +5,8 @@ import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;
 
+
+
 public class NXTMotor implements EngineInterface {
     NXTRegulatedMotor antrieb = new NXTRegulatedMotor(MotorPort.A);
     NXTRegulatedMotor lenkung = new NXTRegulatedMotor(MotorPort.B);

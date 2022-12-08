@@ -1,6 +1,6 @@
 package NebenlaeufigeSysteme.Classes.NXT;
 
-import NebenlaeufigeSysteme.Classes.Sensor;
+import NebenlaeufigeSysteme.Classes.Classes.Sensor;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 import lejos.nxt.SensorPort;
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class NXTSensor extends Sensor implements SensorInterface {
     boolean firstValue = true;
@@ -28,7 +29,7 @@ public class NXTSensor extends Sensor implements SensorInterface {
     private String sensorID;
     ExecutorService exS = Executors.newFixedThreadPool(1);
 
-    NXTSensor(String id){
+    public NXTSensor(String id){
         sensorID = id;
         exS.submit((Callable<String>) () -> {
             start();
@@ -95,11 +96,22 @@ public class NXTSensor extends Sensor implements SensorInterface {
                 e.printStackTrace();
             }
         }
-
+        endComponents(exS);
     }
 
     public void shutdownSensor(){
         sensorON = false;
+    }
+    public static void endComponents(ExecutorService exS) {
+        try {
+            if (!exS.awaitTermination(1000, TimeUnit.MILLISECONDS)) {
+                exS.shutdownNow();
+                System.out.println("executor shuteddown");
+            }
+        } catch (InterruptedException e) {
+            exS.shutdownNow();
+            System.out.println("Executor Failure");
+        }
     }
 
 }

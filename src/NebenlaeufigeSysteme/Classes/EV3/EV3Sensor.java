@@ -1,6 +1,6 @@
 package NebenlaeufigeSysteme.Classes.EV3;
 
-import NebenlaeufigeSysteme.Classes.Sensor;
+import NebenlaeufigeSysteme.Classes.Classes.Sensor;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 import lejos.nxt.SensorPort;

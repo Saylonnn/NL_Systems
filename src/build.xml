@@ -1,51 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="NL_Systems" basedir="." default="run-GUI-GUI">
-    <property name="src.dir"        location="src"/>
+<project name="NL_Systems" basedir=".." default="run-GUI-GUI">
+    <property name="src.dir"        location=""/>
     <property name="build.dir"      location="build"/>
-    <property name="classes.dir"    location="${build.dir}/classes"/>
+    <property name="nxj_out.dir"        location="NXJ_OUT"/>
     <property name="jar.dir"        location="${build.dir}/jar"/>
-    <property name="lib.dir"        location="lib"/>
+    <property name="lib.dir"        location="../lib"/>
     <property name="sil.src.dir"    location="${src.dir}/NebenlaeufigeSysteme/SilTest"/>
     <property name="compile.src.dir"    location="${src.dir}/NebenlaeufigeSysteme/Controller"/>
-    <property name="main-class"     value="NebenlaeufigeSysteme.Aufgaben.Aufgabe6.Main"/>
+
 
     <path id="3rd-party-classpath">
-        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="/lib" includes="**/*.jar"/>
     </path>
 
     <!--Clean - del Build -->
     <target name="clean">
-        <delete dir="${classes.dir}"/>
         <delete dir="${build.dir}"/>
+        <delete dir="${nxj_out.dir}"/>
     </target>
 
     <target name="init">
         <!--Time Stamp-->
         <tstamp/>
+        <mkdir dir="${nxj_out.dir}"/>
         <mkdir dir="${build.dir}"/>
-        <mkdir dir="${classes.dir}"/>
-        <mkdir dir="${lib.dir}"/>
+        <mkdir dir="/lib"/>
     </target>
 
 
     <target name="build" depends="clean, init">
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false"/>
     </target>
 
-    <!-- Build NXT-->
-   <target name="build-NXT" depends="clean, init">
-       <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
-               <classpath>
-                   <path location="${lib.dir}"/>
-               </classpath>
-       </javac>
 
-   </target>
 
     <target name="run-GUI-GUI" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
             <classpath >
-                <pathelement location="${classes.dir}"/>
+                <pathelement location="${build.dir}"/>
             </classpath>
             <arg value="gui"/>
             <arg value="gui"/>
@@ -59,9 +51,9 @@
     </target>-->
 
     <target name="run-ST-ST" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
             <classpath >
-                <pathelement location="${classes.dir}"/>
+                <pathelement location="${build.dir}"/>
             </classpath>
             <arg value="SilTest"/>
             <arg value="SilTest"/>
@@ -74,9 +66,9 @@
     </target>-->
 
     <target name="run-ST-GUI" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
             <classpath >
-                <pathelement location="${classes.dir}"/>
+                <pathelement location="${build.dir}"/>
             </classpath>
             <arg value="SilTest"/>
             <arg value="gui"/>
@@ -89,9 +81,9 @@
     </target> -->
 
     <target name="run-GUI-ST" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
             <classpath >
-                <pathelement location="${classes.dir}"/>
+                <pathelement location="${build.dir}"/>
             </classpath>
             <arg value="gui"/>
             <arg value="SilTest"/>
@@ -100,6 +92,18 @@
 
 
 
+    <!-- Build NXT-->
+    <target name="build-NXT" depends="clean, init">
+        <javac srcdir=". src\NXT\* src\Launcher\*" destdir="${build.dir}" includeantruntime="false">
+            <classpath>
+                <path location="/lib"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="run-NXT" depends="build-NXT">
+
+    </target>
     <!--
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>

@@ -1,12 +1,11 @@
-package NebenlaeufigeSysteme.Classes;
+package NebenlaeufigeSysteme.Classes.Launcher;
+
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Controller implements ObserverInterface {
     boolean working = true;
@@ -23,60 +22,22 @@ public class Controller implements ObserverInterface {
 
 
     // ---------------------------- Constructor depending on params -----------------------------------------
-    Controller(String SensorClass, String EngineClass){
-
-        // ----------------------------------- only GUI -----------------------------------------------------
-        if (SensorClass.equals("gui") && EngineClass.equals("gui")){
-            Gui gui = new Gui();
-            gui.setID("all");
-            gui.addObserver(this);
-            sensor_fl = gui;
-            sensor_fr = gui;
-            sensor_bl =  gui;
-            sensor_br = gui;
-            //Add Controller as Observer (only on 1 Server, otherwise we get 4 update calls)
-            engine = gui;
+    Controller(boolean isGUI, SensorInterface sensor1, SensorInterface sensor2, SensorInterface sensor3, SensorInterface sensor4, EngineInterface engine){
+        if (isGUI){
+            sensor1.addObserver(this);
+        }else{
+            sensor_fl = sensor1;
+            sensor_fl.addObserver(this);
+            sensor_fr = sensor2;
+            sensor_fr.addObserver(this);
+            sensor_bl = sensor3;
+            sensor_bl.addObserver(this);
+            sensor_br = sensor4;
+            sensor_br.addObserver(this);
         }
 
-        // ------------------------------- only SilTest -----------------------------------------------------
-        if (SensorClass.equals("SilTest") && EngineClass.equals("SilTest")){
-            SilTest st = new SilTest();
-            st.setID("all");
-            st.addObserver(this);
-            sensor_fl = st;
-            sensor_fr = st;
-            sensor_bl =  st;
-            sensor_br = st;
-            engine = st;
-
-        }
-
-        // -------------------------- silTest gui ----------------------------------------------------------
-        if (SensorClass.equals("SilTest") && EngineClass.equals("gui")){
-            Gui gui = new Gui();
-            SilTest st = new SilTest();
-            st.setID("all");
-            st.addObserver(this);
-            sensor_fl = st;
-            sensor_fr = st;
-            sensor_bl =  st;
-            sensor_br = st;
-            engine = gui;
-        }
-
-        // ------------------------- gui SilTest -----------------------------------------------------
-        if (SensorClass.equals("gui") && EngineClass.equals("SilTest")){
-            Gui gui = new Gui();
-            gui.setID("all");
-            SilTest st = new SilTest();
-            gui.addObserver(this);
-            sensor_fl = gui;
-            sensor_fr = gui;
-            sensor_bl =  gui;
-            sensor_br = gui;
-            engine = st;
-        }
     }
+
     // -------------------------------- control loop -----------------------------------------------
     public void start(){
         while(working){

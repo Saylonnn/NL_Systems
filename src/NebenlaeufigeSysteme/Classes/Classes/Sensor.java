@@ -1,4 +1,4 @@
-package NebenlaeufigeSysteme.Classes;
+package NebenlaeufigeSysteme.Classes.Classes;
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
@@ -126,6 +126,7 @@ public class Sensor implements SensorInterface {
             System.out.println("[Sensor] " + s);
         }
     }
+
 }
 
 
