@@ -1,11 +1,9 @@
-package NebenlaeufigeSysteme.Classes.Launcher;
+package NebenlaeufigeSysteme.Classes.Classes;
 
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
-
-import java.util.concurrent.ExecutorService;
 
 public class Controller implements ObserverInterface {
     boolean working = true;
@@ -13,7 +11,6 @@ public class Controller implements ObserverInterface {
     // SensorValues and navigation Values
     int fl = 0, fr = 0, bl = 0, br = 0;
     String drivingDirection = "fw";
-    ExecutorService exS;
     SensorInterface sensor_fl;
     SensorInterface sensor_fr;
     SensorInterface sensor_bl;
@@ -22,7 +19,7 @@ public class Controller implements ObserverInterface {
 
 
     // ---------------------------- Constructor depending on params -----------------------------------------
-    Controller(boolean isGUI, SensorInterface sensor1, SensorInterface sensor2, SensorInterface sensor3, SensorInterface sensor4, EngineInterface engine){
+    public Controller(boolean isGUI, SensorInterface sensor1, SensorInterface sensor2, SensorInterface sensor3, SensorInterface sensor4, EngineInterface engine){
         if (isGUI){
             sensor1.addObserver(this);
         }else{

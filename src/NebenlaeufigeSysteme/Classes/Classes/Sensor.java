@@ -7,7 +7,7 @@ import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sensor implements SensorInterface {
+public class Sensor extends Thread implements SensorInterface {
     boolean stringDebugging = false;
     private boolean first_value = false;
 
@@ -63,7 +63,7 @@ public class Sensor implements SensorInterface {
     }
     //Regelschleife - notify observers, wenn sich der Wert ändert
 
-    public void start(){
+    public void run(){
         int big_abs_count = 0;
         while(on) {
             faultTolerantMeasurement(mValues);

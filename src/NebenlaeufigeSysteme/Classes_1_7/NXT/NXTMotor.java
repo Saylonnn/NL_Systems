@@ -1,13 +1,14 @@
-package NebenlaeufigeSysteme.Classes.NXT;
+package NebenlaeufigeSysteme.Classes_1_7.NXT;
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
-import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;
 
 
 
 public class NXTMotor implements EngineInterface {
+
+
     NXTRegulatedMotor antrieb = new NXTRegulatedMotor(MotorPort.A);
     NXTRegulatedMotor lenkung = new NXTRegulatedMotor(MotorPort.B);
     @Override

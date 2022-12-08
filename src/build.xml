@@ -35,7 +35,7 @@
 
 
     <target name="run-GUI-GUI" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
             <classpath >
                 <pathelement location="${build.dir}"/>
             </classpath>
@@ -51,7 +51,7 @@
     </target>-->
 
     <target name="run-ST-ST" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
             <classpath >
                 <pathelement location="${build.dir}"/>
             </classpath>
@@ -66,7 +66,7 @@
     </target>-->
 
     <target name="run-ST-GUI" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
             <classpath >
                 <pathelement location="${build.dir}"/>
             </classpath>
@@ -81,7 +81,7 @@
     </target> -->
 
     <target name="run-GUI-ST" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUILauncher">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
             <classpath >
                 <pathelement location="${build.dir}"/>
             </classpath>
@@ -94,36 +94,47 @@
 
     <!-- Build NXT-->
     <target name="build-NXT" depends="clean, init">
-        <javac srcdir=". src\NXT\* src\Launcher\*" destdir="${build.dir}" includeantruntime="false">
-            <classpath>
-                <path location="/lib"/>
-            </classpath>
-        </javac>
+        <exec executable="cmd" outputproperty="result.process" dir=".\src" output=".output_compile.txt">
+            <arg value="/c"/>
+            <arg value="nxjc"/>
+            <arg value="-bootclasspath"/>
+            <arg value="'.\NebenlaeufigeSysteme\Classes\Launcher\NXT_NXT_Launcher.java;..\lib\classes.jar;.'"/>
+            <arg value="-d"/>
+            <arg value="..\build"/>
+            <arg value="-sourcepath"/>
+            <arg value="."/>
+            <arg value=".\NebenlaeufigeSysteme\Classes_1_7\NXT\*"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Classes\Sensor.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Interfaces\*"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Classes\Controller.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Launcher\NXT_NXT_Launcher.java"/>
+
+        </exec>
+        <echo message="RESULT: ${result.process}" />
+
+        <exec executable="cmd" outputproperty="result.process" dir="build" output="output_link.txt">
+            <arg value="/C"/>
+            <arg value="nxjlink"/>
+            <arg value="-v"/>
+            <arg value="-o"/>
+            <arg value="..\NXJ_OUT\NXT_NXT_Launcher.nxj"/>
+            <arg value="NebenlaeufigeSysteme.Classes.Launcher.NXT_NXT_Launcher"/>
+        </exec>
+        <echo message="RESULT: ${result.process}"/>
     </target>
 
     <target name="run-NXT" depends="build-NXT">
-
-    </target>
-    <!--
-    <target name="jar" depends="compile">
-        <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}" basedir="${classes.dir}">
-            <manifest>
-                <attribute name="Main-Class" value="${main-class}"/>
-            </manifest>
-        </jar>
+        <exec executable="cmd" outputproperty="result.process" dir="NXJ_OUT" output="output_upload.txt">
+            <arg value="/c"/>
+            <arg value="nxjupload"/>
+            <arg value="-u"/>
+            <arg value="..\NXJ_OUT\NXT_NXT_Launcher.nxj"/>
+        </exec>
+        <echo message="RESULT: ${result.process}"/>
     </target>
 
-    <target name="run" depends="jar">
-        <java fork="true" classname="${main-class}">
-            <classpath>
-                <path refid="classpath"/>
-                <path location="${jar.dir}/${ant.project.name}.jar"/>
-            </classpath>
-        </java>
-    </target>
 
-    <target name="clean-build" depends="clean, jar"/>
-    -->
+
+
 
 </project>

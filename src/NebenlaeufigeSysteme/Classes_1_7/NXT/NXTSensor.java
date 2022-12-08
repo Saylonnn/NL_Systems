@@ -1,4 +1,4 @@
-package NebenlaeufigeSysteme.Classes.NXT;
+package NebenlaeufigeSysteme.Classes_1_7.NXT;
 
 import NebenlaeufigeSysteme.Classes.Classes.Sensor;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
@@ -8,10 +8,7 @@ import lejos.nxt.UltrasonicSensor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+
 
 public class NXTSensor extends Sensor implements SensorInterface {
     boolean firstValue = true;
@@ -27,14 +24,11 @@ public class NXTSensor extends Sensor implements SensorInterface {
      */
     private int[] mValues = {0,0,0,0,0,0};
     private String sensorID;
-    ExecutorService exS = Executors.newFixedThreadPool(1);
+
 
     public NXTSensor(String id){
         sensorID = id;
-        exS.submit((Callable<String>) () -> {
-            start();
-            return null;
-        });
+        run();
     }
 
     @Override
@@ -66,7 +60,7 @@ public class NXTSensor extends Sensor implements SensorInterface {
         mValues[0] = newValue;
     }
 
-    public void start(){
+    public void run(){
         SensorPort port = SensorPort.S1;
         if(this.sensorID.equals("FL")){
             port = SensorPort.S1;
@@ -96,22 +90,11 @@ public class NXTSensor extends Sensor implements SensorInterface {
                 e.printStackTrace();
             }
         }
-        endComponents(exS);
     }
 
     public void shutdownSensor(){
         sensorON = false;
     }
-    public static void endComponents(ExecutorService exS) {
-        try {
-            if (!exS.awaitTermination(1000, TimeUnit.MILLISECONDS)) {
-                exS.shutdownNow();
-                System.out.println("executor shuteddown");
-            }
-        } catch (InterruptedException e) {
-            exS.shutdownNow();
-            System.out.println("Executor Failure");
-        }
-    }
+
 
 }
