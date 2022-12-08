@@ -1,3 +1,7 @@
 # Project exclude paths
 /out/
 /build/
+output_link.txt
+output_upload.txt
+.output_compile.txt
+.\NXJ_OUT

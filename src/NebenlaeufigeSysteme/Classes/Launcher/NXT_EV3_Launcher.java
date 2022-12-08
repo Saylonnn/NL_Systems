@@ -8,15 +8,14 @@ import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
 public class NXT_EV3_Launcher {
     public static void main(String[] args) {
-        if (args[0].equals("nxt") && args[1].equals("nxt")){
-            SensorInterface sensor1 = new NXTSensor("fl");
-            SensorInterface sensor2 = new NXTSensor("fr");
-            SensorInterface sensor3 = new NXTSensor("bl");
-            SensorInterface sensor4 = new NXTSensor("br");
-            EngineInterface engine = new EV3Motor();
-            Controller controller = new Controller(false, sensor1, sensor2, sensor3, sensor4, engine);
-            controller.start();
-        }
+        SensorInterface sensor1 = new NXTSensor("fl");
+        SensorInterface sensor2 = new NXTSensor("fr");
+        SensorInterface sensor3 = new NXTSensor("bl");
+        SensorInterface sensor4 = new NXTSensor("br");
+        EngineInterface engine = new EV3Motor();
+        Controller controller = new Controller(false, sensor1, sensor2, sensor3, sensor4, engine);
+        controller.start();
+
 
 
     }
