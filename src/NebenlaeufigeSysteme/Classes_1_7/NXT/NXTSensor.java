@@ -3,6 +3,8 @@ package NebenlaeufigeSysteme.Classes_1_7.NXT;
 import NebenlaeufigeSysteme.Classes.Classes.Sensor;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
+import lejos.nxt.LCD;
+import lejos.nxt.LCDOutputStream;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 
@@ -27,6 +29,7 @@ public class NXTSensor extends Sensor implements SensorInterface {
 
 
     public NXTSensor(String id){
+
         sensorID = id;
         run();
     }

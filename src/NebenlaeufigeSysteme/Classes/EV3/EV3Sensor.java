@@ -8,9 +8,7 @@ import lejos.nxt.UltrasonicSensor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 public class EV3Sensor extends Sensor implements SensorInterface {
     boolean firstValue = true;
@@ -26,14 +24,11 @@ public class EV3Sensor extends Sensor implements SensorInterface {
      */
     private int[] mValues = {0,0,0,0,0,0};
     private String sensorID;
-    ExecutorService exS = Executors.newFixedThreadPool(1);
 
-    EV3Sensor(String id){
+
+    public EV3Sensor(String id){
         sensorID = id;
-        exS.submit((Callable<String>) () -> {
-            start();
-            return null;
-        });
+        run();
     }
 
     @Override
@@ -65,7 +60,7 @@ public class EV3Sensor extends Sensor implements SensorInterface {
         mValues[0] = newValue;
     }
 
-    public void start(){
+    public void run(){
         SensorPort port = SensorPort.S1;
         if(this.sensorID.equals("FL")){
             port = SensorPort.S1;
@@ -95,10 +90,10 @@ public class EV3Sensor extends Sensor implements SensorInterface {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void shutdownSensor(){
         sensorON = false;
     }
+
 }

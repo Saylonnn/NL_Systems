@@ -1,4 +1,4 @@
-package NebenlaeufigeSysteme.Test_Ubungen;
+package Testumgebung.Test_Ubungen;
 
 import java.util.concurrent.*;
 

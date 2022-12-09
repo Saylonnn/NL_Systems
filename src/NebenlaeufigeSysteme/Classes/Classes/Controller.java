@@ -5,7 +5,7 @@ import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
-public class Controller implements ObserverInterface {
+public class Controller extends Thread implements ObserverInterface {
     boolean working = true;
     // --------------------------------- Glob Values -------------------------------------------------
     // SensorValues and navigation Values
@@ -20,23 +20,26 @@ public class Controller implements ObserverInterface {
 
     // ---------------------------- Constructor depending on params -----------------------------------------
     public Controller(boolean isGUI, SensorInterface sensor1, SensorInterface sensor2, SensorInterface sensor3, SensorInterface sensor4, EngineInterface engine){
+        sensor_fl = sensor1;
+        sensor_fr = sensor2;
+        sensor_bl = sensor3;
+        sensor_br = sensor4;
+        this.engine = engine;
         if (isGUI){
             sensor1.addObserver(this);
         }else{
-            sensor_fl = sensor1;
             sensor_fl.addObserver(this);
-            sensor_fr = sensor2;
             sensor_fr.addObserver(this);
-            sensor_bl = sensor3;
             sensor_bl.addObserver(this);
-            sensor_br = sensor4;
             sensor_br.addObserver(this);
         }
+        run();
 
     }
 
     // -------------------------------- control loop -----------------------------------------------
-    public void start(){
+    public void run(){
+        engine.fahren(100);
         while(working){
             try{
                 Thread.sleep(100);
@@ -120,9 +123,8 @@ public class Controller implements ObserverInterface {
         }
     }
 
-
-
-
-
+    public void shutdown(){
+        this.working = false;
+    }
 
 }

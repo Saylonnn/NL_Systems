@@ -1,100 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="NL_Systems" basedir=".." default="run-GUI-GUI">
-    <property name="src.dir"        location=""/>
+    <property name="src.dir"        location="src"/>
     <property name="build.dir"      location="build"/>
     <property name="nxj_out.dir"        location="NXJ_OUT"/>
     <property name="jar.dir"        location="${build.dir}/jar"/>
-    <property name="lib.dir"        location="../lib"/>
+    <property name="lib.dir"        location="lib"/>
     <property name="sil.src.dir"    location="${src.dir}/NebenlaeufigeSysteme/SilTest"/>
     <property name="compile.src.dir"    location="${src.dir}/NebenlaeufigeSysteme/Controller"/>
+    <property name="log_output.dir"     location="logOutput"/>
+    <property name="ev3.out"            location="EV3_OUT"/>
 
 
-    <path id="3rd-party-classpath">
-        <fileset dir="/lib" includes="**/*.jar"/>
+    <path id="extra_classes">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+
     </path>
 
     <!--Clean - del Build -->
     <target name="clean">
         <delete dir="${build.dir}"/>
         <delete dir="${nxj_out.dir}"/>
+        <delete dir="${log_output.dir}"/>
     </target>
 
+    <!-- Init Directories -->
     <target name="init">
-        <!--Time Stamp-->
-        <tstamp/>
         <mkdir dir="${nxj_out.dir}"/>
         <mkdir dir="${build.dir}"/>
         <mkdir dir="/lib"/>
+        <mkdir dir="${log_output.dir}"/>
+    </target>
+
+    <!-- for all non NXT / EV3 including Configs -->
+    <target name="build_all" depends="clean, init">
+        <javac srcdir="${src.dir}\NebenlaeufigeSysteme" destdir="${build.dir}" includeantruntime="false">
+            <classpath refid="extra_classes"/>
+        </javac>
     </target>
 
 
-    <target name="build" depends="clean, init">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false"/>
-    </target>
-
-
-
-    <target name="run-GUI-GUI" depends="build">
+    <!-- launches gui as sensor and engine -->
+    <target name="run-GUI-GUI" depends="build_all">
         <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
-            <classpath >
+            <classpath>
                 <pathelement location="${build.dir}"/>
             </classpath>
-            <arg value="gui"/>
-            <arg value="gui"/>
         </java>
     </target>
 
-
-    <!-- Build Siltest to Siltest
-    <target name="build-ST-ST" depends="clean, init">
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
-    </target>-->
-
-    <target name="run-ST-ST" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
+    <!-- launches SilTest as sensor and engine -->
+    <target name="run-SIL-SIL" depends="build_all">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.SIL_SIL_Launcher">
             <classpath >
                 <pathelement location="${build.dir}"/>
             </classpath>
-            <arg value="SilTest"/>
-            <arg value="SilTest"/>
-        </java>
-    </target>
-
-    <!-- Build Siltest to Siltest
-    <target name="build-ST-GUI" depends="clean, init">
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
-    </target>-->
-
-    <target name="run-ST-GUI" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
-            <classpath >
-                <pathelement location="${build.dir}"/>
-            </classpath>
-            <arg value="SilTest"/>
-            <arg value="gui"/>
-        </java>
-    </target>
-
-    <!-- Build Siltest to Siltest
-    <target name="build-GUI-ST" depends="clean, init">
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
-    </target> -->
-
-    <target name="run-GUI-ST" depends="build">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
-            <classpath >
-                <pathelement location="${build.dir}"/>
-            </classpath>
-            <arg value="gui"/>
-            <arg value="SilTest"/>
         </java>
     </target>
 
 
 
-    <!-- Build NXT-->
-    <target name="build-NXT" depends="clean, init">
-        <exec executable="cmd" outputproperty="result.process" dir=".\src" output=".output_compile.txt">
+    <target name="run-SIL-GUI" depends="build_all">
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.SIL_GUI_Launcher">
+            <classpath >
+                <pathelement location="${build.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+
+    <!-- Build NXT - NXT -->
+    <target name="build-NXT-NXT" depends="clean, init">
+        <exec executable="cmd" outputproperty="result.process" dir=".\src" output="${log_output.dir}\output_compile.txt">
             <arg value="/c"/>
             <arg value="nxjc"/>
             <arg value="-bootclasspath"/>
@@ -108,11 +86,10 @@
             <arg value=".\NebenlaeufigeSysteme\Interfaces\*"/>
             <arg value=".\NebenlaeufigeSysteme\Classes\Classes\Controller.java"/>
             <arg value=".\NebenlaeufigeSysteme\Classes\Launcher\NXT_NXT_Launcher.java"/>
-
         </exec>
         <echo message="RESULT: ${result.process}" />
 
-        <exec executable="cmd" outputproperty="result.process" dir="build" output="output_link.txt">
+        <exec executable="cmd" outputproperty="result.process" dir="build" output="${log_output.dir}\output_link.txt">
             <arg value="/C"/>
             <arg value="nxjlink"/>
             <arg value="-v"/>
@@ -123,8 +100,8 @@
         <echo message="RESULT: ${result.process}"/>
     </target>
 
-    <target name="run-NXT" depends="build-NXT">
-        <exec executable="cmd" outputproperty="result.process" dir="NXJ_OUT" output="output_upload.txt">
+    <target name="run-NXT-NXT" depends="build-NXT-NXT">
+        <exec executable="cmd" outputproperty="result.process" dir="NXJ_OUT" output="${log_output.dir}\output_upload.txt">
             <arg value="/c"/>
             <arg value="nxjupload"/>
             <arg value="-u"/>
@@ -133,6 +110,88 @@
         <echo message="RESULT: ${result.process}"/>
     </target>
 
+
+
+    <!-- Build NXT - NXT -->
+    <target name="build-SIL-NXT" depends="clean, init">
+        <exec executable="cmd" outputproperty="result.process" dir=".\src" output="${log_output.dir}\output_compile.txt">
+            <arg value="/c"/>
+            <arg value="nxjc"/>
+            <arg value="-bootclasspath"/>
+            <arg value="'.\NebenlaeufigeSysteme\Classes\Launcher\SIL_NXT_Launcher.java;..\lib\classes.jar;.'"/>
+            <arg value="-d"/>
+            <arg value="..\build"/>
+            <arg value="-sourcepath"/>
+            <arg value="."/>
+            <arg value=".\NebenlaeufigeSysteme\Classes_1_7\NXT\*"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Classes\SilTest.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Classes\Sensor.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Interfaces\*"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Classes\Controller.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Launcher\SIL_NXT_Launcher.java"/>
+        </exec>
+        <echo message="RESULT: ${result.process}" />
+
+        <exec executable="cmd" outputproperty="result.process" dir="build" output="${log_output.dir}\output_link.txt">
+            <arg value="/C"/>
+            <arg value="nxjlink"/>
+            <arg value="-v"/>
+            <arg value="-o"/>
+            <arg value="..\NXJ_OUT\SIL_NXT_Launcher.nxj"/>
+            <arg value="NebenlaeufigeSysteme.Classes.Launcher.SIL_NXT_Launcher"/>
+        </exec>
+        <echo message="RESULT: ${result.process}"/>
+    </target>
+
+    <target name="run-SIL-NXT" depends="build-SIL-NXT">
+        <exec executable="cmd" outputproperty="result.process" dir="NXJ_OUT" output="${log_output.dir}\output_upload.txt">
+            <arg value="/c"/>
+            <arg value="nxjupload"/>
+            <arg value="-u"/>
+            <arg value="..\NXJ_OUT\SIL_NXT_Launcher.nxj"/>
+        </exec>
+        <echo message="RESULT: ${result.process}"/>
+    </target>
+
+
+
+    <!-- Build SIL to EV3 -->
+    <target name="build-SIL-EV3" depends="clean, init">
+        <javac
+            srcdir="${src.dir}"
+            destdir="${build.dir}"
+            debug="true"
+            includeantruntime="false"
+            includejavaruntime="false"
+            >
+            <classpath refid="extra_classes"/>
+        </javac>
+    </target>
+
+    <!-- make ev3 jar -->
+    <target name="jar_SIL_EV3" depends="build-SIL-EV3">
+        <jar destfile="${ev3.out}\out.jar" basedir="${build.dir}"/>
+        <manifest>
+            <attribute name="Main-Class" value="NebenlaeufigeSysteme.Classes.Launcher.SIL_EV3_Launcher"/>
+            <attribute name="Class-Path" value="..\lib\ev3classes.jar;."/>
+        </manifest>
+    </target>
+
+    <target name="run-SIL-EV3" depends="jar_SIL_EV3">
+        <exec executable="cmd" outputproperty="result.process" dir="EV3_OUT" output="${log_output.dir}\ev3_upload.txt">
+            <arg value="/c"/>
+            <arg value="sshpass"/>
+            <arg value="-p"/>
+            <arg value=""/>
+            <arg value="scp"/>
+            <arg value="-o"/>
+            <arg value="KexAlgorithms=diffie-hellman-group1-sha1"/>
+            <arg value="-o"/>
+            <arg value="Ciphers=aes256-cbc"/>
+            <arg value='root:@10.0.1.1:/home/lejos/programs/;`r`n"'/>
+        </exec>
+
+    </target>
 
 
 

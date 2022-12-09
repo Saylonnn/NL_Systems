@@ -6,11 +6,9 @@ import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class SilTest implements SensorInterface, EngineInterface {
+
+public class SilTest extends Sensor implements SensorInterface, EngineInterface {
     String sensorID;
     private List<ObserverInterface> observers = new ArrayList<>();
     int lenken = 0;
@@ -21,12 +19,8 @@ public class SilTest implements SensorInterface, EngineInterface {
     int sensor_bl = 0;
     int sensor_br = 0;
 
-    ExecutorService exS = Executors.newFixedThreadPool(1);
     public SilTest(){
-        exS.submit((Callable<String>) () ->{
-            start();
-            return null;
-        });
+        start();
     }
 
     @Override
@@ -51,11 +45,11 @@ public class SilTest implements SensorInterface, EngineInterface {
 
     @Override
     public void notifyObservers(int value) {
-        for(ObserverInterface x: observers){
-            x.update("fl", sensor_fl);
-            x.update("fr", sensor_fr);
-            x.update("bl", sensor_bl);
-            x.update("br", sensor_br);
+        for(int i = 0; i < observers.size(); i++){
+            observers.get(i).update("fl", sensor_fl);
+            observers.get(i).update("fr", sensor_fr);
+            observers.get(i).update("bl", sensor_bl);
+            observers.get(i).update("br", sensor_br);
         }
     }
 
@@ -93,7 +87,7 @@ public class SilTest implements SensorInterface, EngineInterface {
         testGleich(lenken, 10);
     }
 
-    public void start(){
+    public void run(){
         while(true) {
             try {
                 Thread.sleep(1000);

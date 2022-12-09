@@ -7,11 +7,11 @@ import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 public class Gui extends Sensor implements SensorInterface, EngineInterface {
     // ---------------------------------------- GUI Objects and Params --------------------------------
@@ -27,7 +27,7 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
     private List<ObserverInterface> observers = new ArrayList<>();
 
     // ---------------------------------------- Controll params ---------------------------------------
-    ExecutorService exS = Executors.newFixedThreadPool(1);
+
     String sensorID;
 
 
@@ -106,19 +106,22 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
         panel2.add(steeringLabel);
         panel2.add(steering);
         main_panel.add(panel2);
-        submitButtton.addActionListener(e -> {
-            notifyObservers(0);
+        submitButtton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                notifyObservers(0);
+            }
         });
-        exS.submit((Callable<String>) () ->{
-            startGUI();
-            return null;
-        } );
-
+        run();
     }
     public void startGUI(){
         jFrame.pack();
         jFrame.setVisible(true);
+    }
 
+    public void run(){
+        System.out.println("GUI launched");
+        startGUI();
     }
 
     @Override
