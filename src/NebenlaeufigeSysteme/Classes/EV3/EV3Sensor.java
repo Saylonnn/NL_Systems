@@ -28,7 +28,7 @@ public class EV3Sensor extends Sensor implements SensorInterface {
 
     public EV3Sensor(String id){
         sensorID = id;
-        run();
+        start();
     }
 
     @Override

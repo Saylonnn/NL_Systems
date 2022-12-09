@@ -10,6 +10,6 @@ public class SIL_GUI_Launcher {
         SilTest sil = new SilTest();
 
         Controller controller = new Controller(true, sil, sil, sil, sil, gui);
-        controller.start();
+
     }
 }

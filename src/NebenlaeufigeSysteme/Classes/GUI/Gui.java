@@ -112,13 +112,14 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
                 notifyObservers(0);
             }
         });
-        run();
+        this.start();
     }
     public void startGUI(){
         jFrame.pack();
         jFrame.setVisible(true);
     }
 
+    @Override
     public void run(){
         System.out.println("GUI launched");
         startGUI();

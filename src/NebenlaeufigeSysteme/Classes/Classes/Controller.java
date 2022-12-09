@@ -33,11 +33,12 @@ public class Controller extends Thread implements ObserverInterface {
             sensor_bl.addObserver(this);
             sensor_br.addObserver(this);
         }
-        run();
+        this.start();
 
     }
 
     // -------------------------------- control loop -----------------------------------------------
+    @Override
     public void run(){
         engine.fahren(100);
         while(working){

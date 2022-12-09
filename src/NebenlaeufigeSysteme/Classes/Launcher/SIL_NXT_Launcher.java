@@ -10,7 +10,5 @@ public class SIL_NXT_Launcher {
         SilTest sil = new SilTest();
         EngineInterface engine = new NXTMotor();
         Controller controller = new Controller(false, sil, sil, sil, sil, engine);
-        controller.start();
-
     }
 }

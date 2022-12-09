@@ -10,27 +10,38 @@ import lejos.nxt.NXTRegulatedMotor;
 public class NXTMotor implements EngineInterface {
 
 
-    NXTRegulatedMotor antrieb = new NXTRegulatedMotor(MotorPort.A);
+    NXTRegulatedMotor antrieb_r = new NXTRegulatedMotor(MotorPort.A);
+    NXTRegulatedMotor antrieb_l = new NXTRegulatedMotor(MotorPort.C);
+
     NXTRegulatedMotor lenkung = new NXTRegulatedMotor(MotorPort.B);
     @Override
     public void lenken(int percent){
-        lenkung.rotate(percent);
+        percent = percent * 10;
+        lenkung.rotateTo(percent);
     }
     @Override
     public void fahren(int percent){
+        percent = - percent;
         if (percent > 0) {
-            antrieb.setSpeed(percent);
-            antrieb.forward();
+            antrieb_l.setSpeed(percent);
+            antrieb_r.setSpeed(percent);
+            antrieb_l.forward();
+            antrieb_r.forward();
 
             LCD.drawString("fahren"+percent , 2, 2);
         }
         if (percent < 0){
-            antrieb.setSpeed(Math.abs(percent));
-            antrieb.backward();
+            antrieb_l.setSpeed(-percent);
+            antrieb_r.setSpeed(-percent);
+            antrieb_l.backward();
+            antrieb_r.backward();
         }
         if (percent == 0){
-            antrieb.setSpeed(0);
-            antrieb.stop();
+            LCD.drawString("STOP",1,1);
+            antrieb_l.setSpeed(0);
+            antrieb_r.setSpeed(0);
+            antrieb_l.stop();
+            antrieb_r.stop();
         }
     }
 }

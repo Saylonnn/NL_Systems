@@ -8,11 +8,14 @@ import lejos.nxt.LCDOutputStream;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class NXTSensor extends Sensor implements SensorInterface {
+    private static UltrasonicSensor sensor;
+
     boolean firstValue = true;
     boolean sensorON = true;
     private List<ObserverInterface> observers = new ArrayList<>();
@@ -31,7 +34,7 @@ public class NXTSensor extends Sensor implements SensorInterface {
     public NXTSensor(String id){
 
         sensorID = id;
-        run();
+        start();
     }
 
     @Override
@@ -43,8 +46,8 @@ public class NXTSensor extends Sensor implements SensorInterface {
     // if lasttransmitted Value != current value send to all observers
     @Override
     public void notifyObservers(int value) {
-        for (ObserverInterface observer : this.observers) {
-            observer.update(this.sensorID, value);
+        for(int i = 0; i < observers.size(); i++){
+            observers.get(i).update(this.sensorID, value);
         }
     }
 
@@ -63,6 +66,7 @@ public class NXTSensor extends Sensor implements SensorInterface {
         mValues[0] = newValue;
     }
 
+    @Override
     public void run(){
         SensorPort port = SensorPort.S1;
         if(this.sensorID.equals("FL")){
@@ -77,11 +81,16 @@ public class NXTSensor extends Sensor implements SensorInterface {
         if(this.sensorID.equals("BR")){
             port = SensorPort.S4;
         }
-        UltrasonicSensor sensor = new UltrasonicSensor(port);
+        sensor = new UltrasonicSensor(port);
+        sensor.reset();
         sensor.capture();
+
+        LCD.drawString("sensor started" + sensorID, 1,1);
+
         while(sensorON){
-            int distance = sensor.getDistance();
-            changeValue(distance);
+            int value = sensor.getDistance();
+            mValues[0] = value;
+
             int[] mValues2 = super.faultTolerantMeasurement(mValues);
             if (mValues[4] != mValues2[4]){
                 notifyObservers(mValues2[4]);

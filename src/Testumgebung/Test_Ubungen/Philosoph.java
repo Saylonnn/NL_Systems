@@ -65,7 +65,7 @@ public class Philosoph {
                 }else{
                     t.setPriority(Thread.MAX_PRIORITY);
                 }
-                Philosoph.this.eat(x);
+                //Philosoph.this.eat(x);
                 return null;
             }
         };

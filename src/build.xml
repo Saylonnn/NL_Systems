@@ -95,6 +95,8 @@
             <arg value="-v"/>
             <arg value="-o"/>
             <arg value="..\NXJ_OUT\NXT_NXT_Launcher.nxj"/>
+            <arg value="-od"/>
+            <arg value="..\NXJ_OUT\NXT_NXT_Launcher.nxd"/>
             <arg value="NebenlaeufigeSysteme.Classes.Launcher.NXT_NXT_Launcher"/>
         </exec>
         <echo message="RESULT: ${result.process}"/>
@@ -112,7 +114,7 @@
 
 
 
-    <!-- Build NXT - NXT -->
+    <!-- Build SIL - NXT -->
     <target name="build-SIL-NXT" depends="clean, init">
         <exec executable="cmd" outputproperty="result.process" dir=".\src" output="${log_output.dir}\output_compile.txt">
             <arg value="/c"/>
@@ -180,9 +182,6 @@
     <target name="run-SIL-EV3" depends="jar_SIL_EV3">
         <exec executable="cmd" outputproperty="result.process" dir="EV3_OUT" output="${log_output.dir}\ev3_upload.txt">
             <arg value="/c"/>
-            <arg value="sshpass"/>
-            <arg value="-p"/>
-            <arg value=""/>
             <arg value="scp"/>
             <arg value="-o"/>
             <arg value="KexAlgorithms=diffie-hellman-group1-sha1"/>
