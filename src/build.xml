@@ -46,6 +46,7 @@
         <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
             <classpath>
                 <pathelement location="${build.dir}"/>
+                <pathelement location="."/>
             </classpath>
         </java>
     </target>
@@ -183,15 +184,21 @@
         <exec executable="cmd" outputproperty="result.process" dir="EV3_OUT" output="${log_output.dir}\ev3_upload.txt">
             <arg value="/c"/>
             <arg value="scp"/>
+            <arg value="-i"/>
+            <arg value=".\id_rsa"/>
             <arg value="-o"/>
             <arg value="KexAlgorithms=diffie-hellman-group1-sha1"/>
             <arg value="-o"/>
             <arg value="Ciphers=aes256-cbc"/>
-            <arg value='root:@10.0.1.1:/home/lejos/programs/;`r`n"'/>
+            <arg value='root@10.0.1.1:/home/lejos/programs/'/>
         </exec>
 
     </target>
 
+
+    <target name="build-NXT-EV3" depends="clean, init">
+
+    </target>
 
 
 
