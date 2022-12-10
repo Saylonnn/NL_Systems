@@ -180,7 +180,7 @@
         </manifest>
     </target>
 
-    <target name="run-SIL-EV3" depends="jar_SIL_EV3">
+    <target name="upload_EV3">
         <exec executable="cmd" outputproperty="result.process" dir="EV3_OUT" output="${log_output.dir}\ev3_upload.txt">
             <arg value="/c"/>
             <arg value="scp"/>
@@ -190,23 +190,22 @@
             <arg value="KexAlgorithms=diffie-hellman-group1-sha1"/>
             <arg value="-o"/>
             <arg value="Ciphers=aes256-cbc"/>
+            <arg value=".\EV3_OUT\out.jar"/>
             <arg value='root@10.0.1.1:/home/lejos/programs/'/>
         </exec>
-
     </target>
 
+    <target name="run-SIL-EV3" depends="jar_SIL_EV3, upload_EV3"/>
 
-    <target name="build-NXT-EV3" depends="clean, init">
-
+    <target name="jar_NXT_EV3" depends="build-SIL-EV3">
+        <jar destfile="${ev3.out}\out.jar" basedir="${build.dir}"/>
+        <manifest>
+            <attribute name="Main-Class" value="NebenlaeufigeSysteme.Classes.Launcher.NXT_EV3_Launcher"/>
+            <attribute name="Class-Path" value="..\lib\ev3classes.jar;."/>
+        </manifest>
     </target>
 
-    <target name="jar-NXT-EV3" depends="build-NXT-EV3">
-
-    </target>
-    <target name="run-NXT-EV3" depends="jar-NXT-EV3">
-
-    </target>
-
+    <target name="run-NXT-EV3" depends="jar_NXT_EV3, upload_EV3"/>
 
 
 </project>
