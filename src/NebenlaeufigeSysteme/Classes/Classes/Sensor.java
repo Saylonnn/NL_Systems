@@ -62,6 +62,7 @@ public class Sensor extends Thread implements SensorInterface {
     }
     //Regelschleife - notify observers, wenn sich der Wert ändert
 
+    @Override
     public void run(){
         int big_abs_count = 0;
         while(on) {
@@ -120,6 +121,8 @@ public class Sensor extends Thread implements SensorInterface {
         }
         return values;
     }
+
+
     public void sensorPrint(String s){
         if (stringDebugging){
             System.out.println("[Sensor] " + s);

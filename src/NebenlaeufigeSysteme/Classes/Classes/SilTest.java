@@ -87,6 +87,7 @@ public class SilTest extends Sensor implements SensorInterface, EngineInterface 
         testGleich(lenken, 10);
     }
 
+    @Override
     public void run(){
         while(true) {
             try {
