@@ -200,6 +200,13 @@
 
     </target>
 
+    <target name="jar-NXT-EV3" depends="build-NXT-EV3">
+
+    </target>
+    <target name="run-NXT-EV3" depends="jar-NXT-EV3">
+
+    </target>
+
 
 
 </project>
