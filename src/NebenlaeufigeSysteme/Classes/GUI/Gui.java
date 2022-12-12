@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Gui extends Sensor implements SensorInterface, EngineInterface {
+public class Gui extends JFrame implements SensorInterface, EngineInterface {
     // ---------------------------------------- GUI Objects and Params --------------------------------
-    JFrame jFrame;
     JSpinner ta1;
     JSpinner ta2;
     JSpinner ta3;
@@ -33,20 +32,18 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
 
     // -------------------------------------- Constructor Build Gui -----------------------------------
     public Gui(){
-        super();
+        super("all");
         // --------------------------------- left gui side --------------------------------------------
 
-
-        jFrame = new JFrame();
-        jFrame.setTitle("Car Controller");
-        jFrame.setSize(900, 540);
-        jFrame.setLocationRelativeTo(null);
-        jFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.setTitle("Car Controller");
+        this.setSize(900, 540);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         JPanel main_panel = new JPanel();
         main_panel.setBackground(Color.DARK_GRAY);
         main_panel.setLayout(new GridLayout(1, 2));
-        jFrame.add(main_panel);
+        this.add(main_panel);
 
         JPanel panel1 = new JPanel();
         panel1.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -112,18 +109,16 @@ public class Gui extends Sensor implements SensorInterface, EngineInterface {
                 notifyObservers(0);
             }
         });
+        run();
+    }
 
-
-        jFrame.pack();
-        jFrame.setVisible(true);
+    public void run(){
+        pack();
+        setVisible(true);
+        System.out.println("pack and visible");
     }
 
 
-
-    @Override
-    public void setID(String id){
-        sensorID = id;
-    }
     @Override
     public void lenken(int percent) {
         System.out.println("steering adjusted " + percent);

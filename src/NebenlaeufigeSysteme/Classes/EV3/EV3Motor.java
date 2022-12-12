@@ -1,10 +1,9 @@
 package NebenlaeufigeSysteme.Classes.EV3;
 
 import NebenlaeufigeSysteme.Interfaces.EngineInterface;
-import lejos.hardware.motor.Motor;
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.NXTRegulatedMotor;
 import lejos.hardware.port.MotorPort;
-import lejos.nxt.LCD;
 
 
 public class EV3Motor implements EngineInterface {

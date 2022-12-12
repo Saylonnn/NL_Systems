@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NXTSensor extends Sensor implements SensorInterface {
+public class NXTSensor extends Sensor {
     private static UltrasonicSensor sensor;
 
     boolean firstValue = true;
@@ -28,13 +28,11 @@ public class NXTSensor extends Sensor implements SensorInterface {
     [5] big_abs_count
      */
     private int[] mValues = {0,0,0,0,0,0};
-    private String sensorID;
+    String sensorID;
 
 
     public NXTSensor(String id){
-
-        sensorID = id;
-        start();
+        super(id);
     }
 
     @Override
@@ -68,40 +66,50 @@ public class NXTSensor extends Sensor implements SensorInterface {
 
     @Override
     public void run(){
-        SensorPort port = SensorPort.S1;
-        if(this.sensorID.equals("FL")){
-            port = SensorPort.S1;
-        }
-        if(this.sensorID.equals("FR")){
-            port = SensorPort.S2;
-        }
-        if(this.sensorID.equals("BL")){
-            port = SensorPort.S3;
-        }
-        if(this.sensorID.equals("BR")){
-            port = SensorPort.S4;
-        }
-        sensor = new UltrasonicSensor(port);
-        sensor.reset();
-        sensor.capture();
 
-        LCD.drawString("sensor started" + sensorID, 1,1);
+        Thread thread = new Thread(){
+            public void run(){
+                SensorPort port = SensorPort.S1;
+                if(sensorID.equals("FL")){
+                    port = SensorPort.S1;
+                }
+                if(sensorID.equals("FR")){
+                    port = SensorPort.S2;
+                }
+                if(sensorID.equals("BL")){
+                    port = SensorPort.S3;
+                }
+                if(sensorID.equals("BR")){
+                    port = SensorPort.S4;
+                }
 
-        while(sensorON){
-            int value = sensor.getDistance();
-            mValues[0] = value;
+                sensor = new UltrasonicSensor(port);
+                sensor.reset();
+                sensor.capture();
 
-            int[] mValues2 = super.faultTolerantMeasurement(mValues);
-            if (mValues[4] != mValues2[4]){
-                notifyObservers(mValues2[4]);
-                mValues = mValues2;
+                LCD.drawString("sensor started" + sensorID, 1,1);
+
+                while(sensorON) {
+                    int value = sensor.getDistance();
+                    if (sensorID.equals("fl")) {
+                        LCD.drawString(sensorID + value, 2, 1);
+                    }
+                    mValues[0] = value;
+
+                    int[] mValues2 = faultTolerantMeasurement(mValues);
+                    if (mValues[4] != mValues2[4]) {
+                        notifyObservers(mValues2[4]);
+                        mValues = mValues2;
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            try{
-                Thread.sleep(100);
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
+        };
+        thread.start();
     }
 
     public void shutdownSensor(){

@@ -20,12 +20,8 @@ public class SilTest extends Sensor implements SensorInterface, EngineInterface 
     int sensor_br = 0;
 
     public SilTest(){
-        start();
-    }
+        super("all");
 
-    @Override
-    public void setID(String id){
-        sensorID = id;
     }
 
     @Override
@@ -87,21 +83,26 @@ public class SilTest extends Sensor implements SensorInterface, EngineInterface 
         testGleich(lenken, 10);
     }
 
-    @Override
+
     public void run(){
-        while(true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        Thread thread = new Thread(){
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    test1();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    test2();
+                }
             }
-            test1();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            test2();
-        }
+        };
+        thread.start();
     }
 }

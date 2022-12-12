@@ -6,7 +6,7 @@ import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sensor extends Thread implements SensorInterface {
+public class Sensor implements SensorInterface {
     boolean stringDebugging = false;
     private boolean first_value = false;
 
@@ -19,6 +19,11 @@ public class Sensor extends Thread implements SensorInterface {
     private boolean on = true;
 
     private List<ObserverInterface> observers = new ArrayList<>();
+
+    public Sensor(String id){
+        sensorID = id;
+        run();
+    }
 
     //Damit ein neuer Messwert simuliert werden kann
     public void changeValue(int newValue){
@@ -56,24 +61,24 @@ public class Sensor extends Thread implements SensorInterface {
 
     }
 
-    @Override
-    public void setID(String id) {
-        sensorID = id;
-    }
-    //Regelschleife - notify observers, wenn sich der Wert ändert
 
-    @Override
+    //Regelschleife - notify observers, wenn sich der Wert ändert
     public void run(){
-        int big_abs_count = 0;
-        while(on) {
-            faultTolerantMeasurement(mValues);
-            //damit nicht durchgehend überprüft wird
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        Thread thread = new Thread() {
+            public void run(){
+                int big_abs_count = 0;
+                while(on) {
+                    mValues = faultTolerantMeasurement(mValues);
+                    //damit nicht durchgehend überprüft wird
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }
+        };
+        thread.start();
     }
 
     public int[] faultTolerantMeasurement(int[] values){

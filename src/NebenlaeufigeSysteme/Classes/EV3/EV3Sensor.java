@@ -3,14 +3,18 @@ package NebenlaeufigeSysteme.Classes.EV3;
 import NebenlaeufigeSysteme.Classes.Classes.Sensor;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
-import lejos.nxt.SensorPort;
-import lejos.nxt.UltrasonicSensor;
+import lejos.robotics.SampleProvider;
+import lejos.hardware.port.Port;
+import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.NXTUltrasonicSensor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class EV3Sensor extends Sensor implements SensorInterface {
+    NXTUltrasonicSensor sensor;
+    SampleProvider distance;
     boolean firstValue = true;
     boolean sensorON = true;
     private List<ObserverInterface> observers = new ArrayList<>();
@@ -27,8 +31,8 @@ public class EV3Sensor extends Sensor implements SensorInterface {
 
 
     public EV3Sensor(String id){
-        sensorID = id;
-        start();
+        super(id);
+
     }
 
     @Override
@@ -61,35 +65,46 @@ public class EV3Sensor extends Sensor implements SensorInterface {
     }
 
     public void run(){
-        SensorPort port = SensorPort.S1;
-        if(this.sensorID.equals("FL")){
-            port = SensorPort.S1;
-        }
-        if(this.sensorID.equals("FR")){
-            port = SensorPort.S2;
-        }
-        if(this.sensorID.equals("BL")){
-            port = SensorPort.S3;
-        }
-        if(this.sensorID.equals("BR")){
-            port = SensorPort.S4;
-        }
-        UltrasonicSensor sensor = new UltrasonicSensor(port);
-        sensor.capture();
-        while(sensorON){
-            int distance = sensor.getDistance();
-            changeValue(distance);
-            int[] mValues2 = super.faultTolerantMeasurement(mValues);
-            if (mValues[4] != mValues2[4]){
-                notifyObservers(mValues2[4]);
-                mValues = mValues2;
+        Thread thread = new Thread(){
+            public void run() {
+                Port port = SensorPort.S1;
+                if (sensorID.equals("FL")) {
+                    port = SensorPort.S1;
+                }
+                if (sensorID.equals("FR")) {
+                    port = SensorPort.S2;
+                }
+                if (sensorID.equals("BL")) {
+                    port = SensorPort.S3;
+                }
+                if (sensorID.equals("BR")) {
+                    port = SensorPort.S4;
+                }
+                int newSensorValue;
+                sensor = new NXTUltrasonicSensor(port);
+                sensor.getDistanceMode();
+                sensor.enable();
+                sensor.getMode("Distance");
+                while (sensorON) {
+                    float[] sample = new float[distance.sampleSize()];
+                    distance.fetchSample(sample, 0);
+                    newSensorValue = (int) Math.round(sample[0]);
+
+                    changeValue(newSensorValue);
+                    int[] mValues2 = faultTolerantMeasurement(mValues);
+                    if (mValues[4] != mValues2[4]) {
+                        notifyObservers(mValues2[4]);
+                        mValues = mValues2;
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            try{
-                Thread.sleep(100);
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
-        }
+        };
+        thread.start();
     }
 
     public void shutdownSensor(){

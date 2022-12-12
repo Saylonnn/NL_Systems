@@ -23,6 +23,7 @@
         <delete dir="${build.dir}"/>
         <delete dir="${nxj_out.dir}"/>
         <delete dir="${log_output.dir}"/>
+        <delete dir="${ev3.out}"/>
     </target>
 
     <!-- Init Directories -->
@@ -31,6 +32,7 @@
         <mkdir dir="${build.dir}"/>
         <mkdir dir="/lib"/>
         <mkdir dir="${log_output.dir}"/>
+        <mkdir dir="${ev3.out}"/>
     </target>
 
     <!-- for all non NXT / EV3 including Configs -->
@@ -42,8 +44,8 @@
 
 
     <!-- launches gui as sensor and engine -->
-    <target name="run-GUI-GUI" depends="build_all">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher">
+    <target name="run-GUI-GUI" depends="build_all"  >
+        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher" outputproperty="result.process"  output="${log_output.dir}\gui_log.txt">
             <classpath>
                 <pathelement location="${build.dir}"/>
                 <pathelement location="."/>
@@ -160,46 +162,72 @@
 
     <!-- Build SIL to EV3 -->
     <target name="build-SIL-EV3" depends="clean, init">
-        <javac
-            srcdir="${src.dir}"
-            destdir="${build.dir}"
-            debug="true"
-            includeantruntime="false"
-            includejavaruntime="false"
-            >
-            <classpath refid="extra_classes"/>
-        </javac>
+            <!--
+        <arg value="/c"/>
+        <arg value="nxjc"/>
+        <arg value="-bootclasspath"/>
+        <arg value="'.\NebenlaeufigeSysteme\Classes\Launcher\SIL_NXT_Launcher.java;..\lib\classes.jar;.'"/>
+        <arg value="-d"/>
+        <arg value="..\build"/>
+        <arg value="-sourcepath"/>
+        <arg value="."/>
+        <arg value=".\NebenlaeufigeSysteme\Classes_1_7\NXT\*"/>
+        <arg value=".\NebenlaeufigeSysteme\Classes\Classes\SilTest.java"/>
+        <arg value=".\NebenlaeufigeSysteme\Classes\Classes\Sensor.java"/>
+        <arg value=".\NebenlaeufigeSysteme\Interfaces\*"/>
+        <arg value=".\NebenlaeufigeSysteme\Classes\Classes\Controller.java"/>
+        <arg value=".\NebenlaeufigeSysteme\Classes\Launcher\SIL_NXT_Launcher.java"/>
+        -->
+        <exec executable="cmd" outputproperty="result.process" dir="src" output="${log_output.dir}\build_SIL_EV3_log.txt">
+            <arg value='/C'/>
+            <arg value="javac"/>
+            <arg value="-classpath"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Launcher\SIL_NXT_Launcher;..\lib\ev3classes.jar;."/>
+            <arg value="-d"/>
+            <arg value="..\build"/>
+            <arg value="-sourcepath"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Classes\*.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\EV3\*.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Interfaces\*.java"/>
+            <arg value=".\NebenlaeufigeSysteme\Classes\Launcher\SIL_EV3_Launcher.java"/>
+
+
+        </exec>
+        <echo message="RESULT: ${result.process}"/>
     </target>
 
     <!-- make ev3 jar -->
     <target name="jar_SIL_EV3" depends="build-SIL-EV3">
         <jar destfile="${ev3.out}\out.jar" basedir="${build.dir}"/>
-        <manifest>
+        <manifest file="MANIFEST.MF">
             <attribute name="Main-Class" value="NebenlaeufigeSysteme.Classes.Launcher.SIL_EV3_Launcher"/>
             <attribute name="Class-Path" value="..\lib\ev3classes.jar;."/>
         </manifest>
     </target>
 
     <target name="upload_EV3">
-        <exec executable="cmd" outputproperty="result.process" dir="EV3_OUT" output="${log_output.dir}\ev3_upload.txt">
+        <exec executable="cmd" outputproperty="result.process" output="${log_output.dir}\ev3_upload.txt">
+            <arg value="/C scp -i .id_rsa -o KexAlgorithms=diffie-hellman-group1-sha1 -o Ciphers=aes256-cbc ..\EV3_OUT\out.jar root@10.0.1.1:/home/lejos/programs/"/>
+            <!--
             <arg value="/c"/>
-            <arg value="scp"/>
+            <arg value="scp/>
             <arg value="-i"/>
             <arg value=".\id_rsa"/>
             <arg value="-o"/>
             <arg value="KexAlgorithms=diffie-hellman-group1-sha1"/>
             <arg value="-o"/>
             <arg value="Ciphers=aes256-cbc"/>
-            <arg value=".\EV3_OUT\out.jar"/>
-            <arg value='root@10.0.1.1:/home/lejos/programs/'/>
+            <arg value="..\EV3_OUT\out.jar"/>
+            <arg value="root@10.0.1.1:/home/lejos/programs/"/> -->
         </exec>
+        <echo message="Result: ${result.process}"/>
     </target>
 
     <target name="run-SIL-EV3" depends="jar_SIL_EV3, upload_EV3"/>
 
     <target name="jar_NXT_EV3" depends="build-SIL-EV3">
         <jar destfile="${ev3.out}\out.jar" basedir="${build.dir}"/>
-        <manifest>
+        <manifest file="EV3_OUT\MANIFEST.MF">
             <attribute name="Main-Class" value="NebenlaeufigeSysteme.Classes.Launcher.NXT_EV3_Launcher"/>
             <attribute name="Class-Path" value="..\lib\ev3classes.jar;."/>
         </manifest>
