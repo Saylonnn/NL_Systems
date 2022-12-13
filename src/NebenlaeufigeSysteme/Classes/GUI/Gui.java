@@ -127,7 +127,6 @@ public class Gui extends JFrame implements SensorInterface, EngineInterface {
 
     @Override
     public void fahren(int percent) {
-
         motorSpeed.setText(Integer.toString(percent));
     }
 
@@ -145,8 +144,4 @@ public class Gui extends JFrame implements SensorInterface, EngineInterface {
             x.update("br", (Integer) ta4.getValue());
         }
     }
-
-
-
-
 }

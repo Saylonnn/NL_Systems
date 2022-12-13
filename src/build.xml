@@ -45,21 +45,19 @@
 
     <!-- launches gui as sensor and engine -->
     <target name="run-GUI-GUI" depends="build_all"  >
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher" outputproperty="result.process"  output="${log_output.dir}\gui_log.txt">
-            <classpath>
-                <pathelement location="${build.dir}"/>
-                <pathelement location="."/>
-            </classpath>
-        </java>
+        <exec executable="cmd" outputproperty="result.process" dir=".\build" output="${log_output.dir}\run-GUI-GUI.txt">
+            <arg value="/c java NebenlaeufigeSysteme.Classes.Launcher.GUI_GUI_Launcher"/>
+        </exec>
+        <echo message="RESULT ${result.process}"/>
+
     </target>
 
     <!-- launches SilTest as sensor and engine -->
     <target name="run-SIL-SIL" depends="build_all">
-        <java classname="NebenlaeufigeSysteme.Classes.Launcher.SIL_SIL_Launcher">
-            <classpath >
-                <pathelement location="${build.dir}"/>
-            </classpath>
-        </java>
+        <exec executable="cmd" outputproperty="result.process" dir=".\build" output="${log_output.dir}\run-SIL-SIL.txt">
+            <arg value="/c java NebenlaeufigeSysteme.Classes.Launcher.SIL_SIL_Launcher"/>
+        </exec>
+        <echo message="RESULT ${result.process}"/>
     </target>
 
 
