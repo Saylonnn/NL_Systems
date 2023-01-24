@@ -7,6 +7,9 @@ import lejos.nxt.LCD;
 import lejos.nxt.LCDOutputStream;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
+import lejos.robotics.objectdetection.Feature;
+import lejos.robotics.objectdetection.FeatureDetector;
+import lejos.robotics.objectdetection.RangeFeatureDetector;
 
 
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ import java.util.List;
 
 
 public class NXTSensor extends Sensor {
-    private static UltrasonicSensor sensor;
+    private static UltrasonicSensor sonic;
 
     boolean firstValue = true;
     boolean sensorON = true;
@@ -32,7 +35,9 @@ public class NXTSensor extends Sensor {
 
 
     public NXTSensor(String id){
+
         super(id);
+        sensorID = id;
     }
 
     @Override
@@ -82,17 +87,24 @@ public class NXTSensor extends Sensor {
                 if(sensorID.equals("BR")){
                     port = SensorPort.S4;
                 }
-
-                sensor = new UltrasonicSensor(port);
-                sensor.reset();
-                sensor.capture();
-
-                LCD.drawString("sensor started" + sensorID, 1,1);
-
+                LCD.clear();
+                LCD.drawString(sensorID + " " + port.toString(), 0, 0);
+                sonic = new UltrasonicSensor(port);
+                sonic.reset();
+                sonic.continuous();
+                LCD.drawString(String.valueOf(sonic.getActualMode()), 3,4);
+                int value;
                 while(sensorON) {
-                    int value = sensor.getDistance();
-                    if (sensorID.equals("fl")) {
-                        LCD.drawString(sensorID + value, 2, 1);
+
+                    value = sonic.getDistance();
+
+                    if (value > 255) {
+                        value = 255;
+                    } else if (value < 12) {
+                        value = 0;
+                    }
+                    if (sensorID.equals("FL")) {
+                        LCD.drawString(String.valueOf(value), 3, 2);
                     }
                     mValues[0] = value;
 
@@ -107,7 +119,8 @@ public class NXTSensor extends Sensor {
                         e.printStackTrace();
                     }
                 }
-            }
+                }
+
         };
         thread.start();
     }

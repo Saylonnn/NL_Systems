@@ -5,7 +5,7 @@ import NebenlaeufigeSysteme.Interfaces.EngineInterface;
 import NebenlaeufigeSysteme.Interfaces.ObserverInterface;
 import NebenlaeufigeSysteme.Interfaces.SensorInterface;
 
-public class Controller extends Thread implements ObserverInterface {
+public class    Controller extends Thread implements ObserverInterface {
     boolean working = true;
     // --------------------------------- Glob Values -------------------------------------------------
     // SensorValues and navigation Values
@@ -40,7 +40,7 @@ public class Controller extends Thread implements ObserverInterface {
     // -------------------------------- control loop -----------------------------------------------
     @Override
     public void run(){
-        engine.fahren(100);
+        engine.fahren(500);
         while(working){
             try{
                 Thread.sleep(100);
@@ -54,6 +54,12 @@ public class Controller extends Thread implements ObserverInterface {
     //-------------------------------- working Methodes ---------------------------------------------
     // Decide Movement based on Sensor Input Values --> Stored in Global Variables
     private void decideMovement(){
+
+        if(fl < 10 || fr < 10){
+            engine.fahren(0);
+
+        }
+        /*
         if (drivingDirection.equals("fw")){
             //Stop infront of a wall
             if ((fl < 10 | fr < 10 )){
@@ -100,6 +106,7 @@ public class Controller extends Thread implements ObserverInterface {
                 engine.lenken(0);
             }
         }
+        */
     }
 
     //-------------------------------- Override Methodes ---------------------------------------------
